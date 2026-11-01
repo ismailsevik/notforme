@@ -18,7 +18,7 @@ x.com,twitter.com##div[role="tablist"] > div[role="presentation"]:first-child:ha
 x.com,twitter.com##[data-testid="ScrollSnap-List"] > div[role="presentation"]:nth-child(2):style(flex: 1 1 100% !important; max-width: 100% !important;)
 
 ! İsteğe bağlı: Üst sekme çubuğunu (For You / Following tabbar) tamamen gizlemek için aşağıdaki satırın başındaki ünlemi kaldırın:
-! x.com,twitter.com##[data-testid="primaryColumn"] div[role="navigation"]:has([data-testid="ScrollSnap-List"])
+ x.com,twitter.com##[data-testid="primaryColumn"] div[role="navigation"]:has([data-testid="ScrollSnap-List"])
 
 ! ============================================================================
 ! 2. GROK (GROX) BUTONLARINI, SEKME VE PANELLERİNİ KALDIRMA
