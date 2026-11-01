@@ -1,0 +1,6 @@
+{
+  "name": "BirdShield — Brave Shields için Klasik Twitter Filtre ve Repo Oluşturucu",
+  "description": "Brave Shields İçerik Filtreleme ve GitHub barındırma için Twitter/X 'For You' sekmesini kaldıran, Grok'u temizleyen ve eski Twitter kuşu logosunu geri getiren açık kaynak filtre stüdyosu.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
