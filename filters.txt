@@ -1,5 +1,5 @@
 [Adblock Plus 2.0]
-! Title: Classic Twitter for Brave Shields (Keep Top Bar, Hide For You/Following/Topics/+ Tabbar, No Grok, Bird Logo)
+! Title: Notforme - Twitter "For You" blocker
 ! Description: En üst barı (Profil resmi ve Logo) korur, hemen altındaki For You / Following / Topic + ikonlu tabbar satırını ve Grok'u kaldırır, Splash Screen çift ikon sorununu çözer.
 ! Version: 2026.11.04
 ! Homepage: https://github.com/classic-twitter/brave-shields-filter
