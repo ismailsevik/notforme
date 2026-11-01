@@ -1,18 +1,18 @@
 [Adblock Plus 2.0]
 ! Title: Classic Twitter for Brave Shields (No Tabbar & Gray Box, Keep Profile & Bird Logo, No Grok)
-! Description: Twitter/X üzerinde üstteki "Sana Özel / Takip edilenler / + Konular / +" sekme satırını tamamen kaldırır, Profil bağlantısını/resmini, menüyü ve klasik mavi Twitter kuşu logosunu korur, Grok'u temizler.
-! Version: 2026.11.02
+! Description: Twitter/X üzerinde üstteki "Sana Özel / Takip edilenler / + Konular / +" sekme satırını tamamen kaldırır, üst bardaki Profil resmini ve klasik mavi Twitter kuşu logosunu korur, Splash Screen'de çift logo sorununu önler ve Grok'u temizler.
+! Version: 2026.11.03
 ! Homepage: https://github.com/classic-twitter/brave-shields-filter
 ! Expires: 1 day (update frequency)
 ! License: MIT
 
 ! ============================================================================
-! 1. ÜST SEKME SATIRI ("SANA ÖZEL", "TAKİP EDİLENLER", "+ KONULAR", "+" KUTUSU)
-!    KALDIRMA (PROFİL BAĞLANTISI, LOGO, GEÇMİŞ VE AYARLAR SAYFASI KORUNUR)
+! 1. SADECE ÜST SEKME SATIRI ("FOR YOU / SANA ÖZEL", "TAKİP EDİLENLER",
+!    "+ KONULAR", "+" KUTUSU) KALDIRMA (ÜST BAR PROFİL VE LOGO KORUNUR)
 ! ============================================================================
 
-! Yalnızca 1. satırın (Profil bağlantısı + Twitter logosu) altındaki 2. satırı (Sekme çubuğunu) gizle.
-! div:first-child (Üst bar: Profil resmi ve Logo) ASLA seçilmez ve her sayfada görünür kalır.
+! Yalnızca 1. satırın (Sol: Profil resmi, Orta: Logo) altındaki 2. satırı (Sekme çubuğunu) gizle.
+! 1. satır (div:first-child) ASLA seçilmez; üst bar tam istediğiniz gibi sade kalır.
 x.com,twitter.com##div:first-child + div:has([data-testid="ScrollSnap-List"]):not(:has(article)):not(:has(section)):not(:has([data-testid="cellInnerDiv"]))
 x.com,twitter.com##div:first-child + nav:has([data-testid="ScrollSnap-List"])
 x.com,twitter.com##nav:has([data-testid="ScrollSnap-List"]):not(:has([data-testid="TopNavBar"])):not(:has([data-testid="DashButton_ProfileIcon_Link"])):not(:has([data-testid^="UserAvatar-Container"]))
@@ -20,7 +20,7 @@ x.com,twitter.com##div[role="tablist"]:has([data-testid="ScrollSnap-List"])
 x.com,twitter.com##[data-testid="ScrollSnap-SwipeableList"]
 x.com,twitter.com##[data-testid="ScrollSnap-List"]
 
-! Sekme satırının en sağında kalan gri kutuyu ve "+" (Artı) butonunu gizle (Üst bardaki profil ve logoya dokunmaz)
+! Sekme satırının sağındaki "+" ikonu ve gri kare kutusu (Üst bardaki profil ve logoya dokunmaz)
 x.com,twitter.com##div[role="tablist"]:has([data-testid="ScrollSnap-List"]) ~ *
 x.com,twitter.com##[data-testid="ScrollSnap-SwipeableList"] ~ *
 x.com,twitter.com##[data-testid="ScrollSnap-List"] ~ *
@@ -39,35 +39,41 @@ x.com,twitter.com##[data-testid="ScrollSnap-nextButtonWrapper"]
 x.com,twitter.com##[data-testid="ScrollSnap-prevButtonWrapper"]
 
 ! ============================================================================
-! 2. GROK (GROX) BUTONLARINI, SEKME VE PANELLERİNİ KALDIRMA
+! 2. SADECE GROK (GROX) BUTONLARINI, SEKME VE PANELLERİNİ KALDIRMA
+!    (SOL / MOBİL MENÜDEKİ DİĞER HİÇBİR ÖĞEYE DOKUNULMAZ)
 ! ============================================================================
 
-! Sol menüdeki ve mobil alt bardaki Grok navigasyon bağlantısını gizle
 x.com,twitter.com##a[href="/i/grok"]
 x.com,twitter.com##a[href*="/i/grok"]
 x.com,twitter.com##a[aria-label="Grok"]
 x.com,twitter.com##nav[role="navigation"] a[data-testid*="Grok"]
-
-! Sağ alt köşedeki açılır Grok çekmecesini (Grok Drawer) ve sohbet kutusunu gizle
 x.com,twitter.com##[data-testid="GrokDrawer"]
 x.com,twitter.com##[data-testid="GrokDrawerHeader"]
 x.com,twitter.com##div[data-testid="grokImgGen"]
-
-! Gönderi (Tweet) kartları üzerindeki Grok "Bu gönderiyi açıkla" ikonlarını ve butonlarını gizle
 x.com,twitter.com##button[aria-label*="Grok"]
 x.com,twitter.com##[data-testid="grok_button"]
 x.com,twitter.com##article [role="group"] button[aria-label*="Grok"]
 x.com,twitter.com##article div:has(> button[aria-label*="Grok"])
-
-! Sağ kenar çubuğundaki (Sidebar) Grok öneri ve tanıtım kartlarını gizle
 x.com,twitter.com##[data-testid="sidebarColumn"] a[href*="/i/grok"]
 x.com,twitter.com##[data-testid="sidebarColumn"] aside:has(a[href*="/i/grok"])
 
 ! ============================================================================
-! 3. X LOGOSUNU ESKİ KLASİK TWITTER KUŞU LOGOSUYLA DEĞİŞTİRME (CSP UYUMLU)
+! 3. X LOGOSUNU ESKİ KLASİK TWITTER KUŞU LOGOSUYLA DEĞİŞTİRME
+!    (ÜST BAR VE SPLASH SCREEN - ÇİFT İKON SORUNU OLMADAN)
 ! ============================================================================
 
-! Orijinal X SVG path öğesini gizlemeden (opacity: 1) doğrudan klasik mavi Twitter kuşu vektörüne (d: path) dönüştürür.
-! Böylece CSP engeli yüzünden logonun kaybolması önlenir; her sayfada mavi Twitter kuşu görünür.
-x.com,twitter.com##svg path[d^="M18.244"]:style(fill: #1DA1F2 !important; color: #1DA1F2 !important; opacity: 1 !important; visibility: visible !important; display: inline !important;)
-x.com,twitter.com##svg path[d^="M18.244"]:style(d: path("M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z") !important; fill: #1DA1F2 !important; color: #1DA1F2 !important; opacity: 1 !important; visibility: visible !important;)
+! 3.1 Orijinal X vektör çizimini (path) hem Splash Screen (#placeholder) hem de Üst Barda tamamen gizle
+! (Böylece Splash Screen'de hem X hem Twitter kuşunun üst üste binmesi kesin olarak engellenir)
+x.com,twitter.com###placeholder svg path
+x.com,twitter.com###placeholder svg g
+x.com,twitter.com##svg path[d^="M18.244"]
+x.com,twitter.com###placeholder svg path:style(display: none !important; opacity: 0 !important; visibility: hidden !important; fill: transparent !important;)
+x.com,twitter.com##svg path[d^="M18.244"]:style(display: none !important; opacity: 0 !important; visibility: hidden !important; fill: transparent !important;)
+
+! 3.2 Açılış / Yükleme ekranındaki (Splash Screen - #placeholder) SVG kutusuna sadece mavi Twitter kuşu ekle
+x.com,twitter.com###placeholder svg:style(background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231DA1F2'%3E%3Cpath d='M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z'/%3E%3C/svg%3E") !important; background-repeat: no-repeat !important; background-position: center !important; background-size: contain !important;)
+
+! 3.3 Mobil Üst Bar ve Masaüstü Sol Üst Bar'daki X logosunun yerine mavi Twitter kuşu ekle
+x.com,twitter.com##h1[role="heading"] svg:style(background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231DA1F2'%3E%3Cpath d='M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z'/%3E%3C/svg%3E") !important; background-repeat: no-repeat !important; background-position: center !important; background-size: contain !important; min-width: 28px !important; min-height: 28px !important;)
+x.com,twitter.com##a[href="/home"]:not([data-testid="AppTabBar_Home_Link"]) svg:style(background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231DA1F2'%3E%3Cpath d='M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z'/%3E%3C/svg%3E") !important; background-repeat: no-repeat !important; background-position: center !important; background-size: contain !important; min-width: 26px !important; min-height: 26px !important;)
+x.com,twitter.com##svg:has(path[d^="M18.244"]):style(background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231DA1F2'%3E%3Cpath d='M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z'/%3E%3C/svg%3E") !important; background-repeat: no-repeat !important; background-position: center !important; background-size: contain !important; min-width: 26px !important; min-height: 26px !important;)

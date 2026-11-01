@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Classic Twitter (No Tabbar & Gray Box, Keep Profile & Bird Logo, No Grok)
 // @namespace    https://github.com/classic-twitter/brave-shields-filter
-// @version      3.1.0
-// @description  Twitter/X üzerinde "For You", "Takip edilenler", "+ Konular" ve sağdaki "+" gri kutusunu kaldırır, Profil bağlantısını, menüyü ve Twitter kuşu logosunu korur, Grok'u temizler.
+// @version      3.2.0
+// @description  Twitter/X üzerinde "For You", "Takip edilenler", "+ Konular" ve sağdaki "+" gri kutusunu kaldırır, Profil resmini, menüyü ve Twitter kuşu logosunu korur, Splash Screen çift logo sorununu çözer ve Grok'u temizler.
 // @author       ClassicTwitter
 // @match        https://x.com/*
 // @match        https://twitter.com/*
@@ -24,7 +24,7 @@
   const style = document.createElement('style');
   style.id = 'birdshield-classic-twitter-style';
   style.textContent = `
-    /* 1. Yalnızca 2. satırdaki sekme çubuğunu ve sağdaki gri + kutusunu gizle (1. satır: Profil bağlantısı ve Logo korunur) */
+    /* 1. Yalnızca 2. satırdaki sekme çubuğunu ve sağdaki gri + kutusunu gizle (1. satır: Profil resmi ve Logo korunur) */
     div:first-child + div:has([data-testid="ScrollSnap-List"]):not(:has(article)):not(:has(section)):not(:has([data-testid="cellInnerDiv"])),
     div:first-child + nav:has([data-testid="ScrollSnap-List"]),
     nav:has([data-testid="ScrollSnap-List"]):not(:has([data-testid="TopNavBar"])):not(:has([data-testid="DashButton_ProfileIcon_Link"])):not(:has([data-testid^="UserAvatar-Container"])),
@@ -56,14 +56,32 @@
       display: none !important;
     }
 
-    /* 3. X Logosunu Klasik Twitter Kuşu ile değiştir (CSP-uyumlu d: path() ve fill) */
+    /* 3. Orijinal X path çizimini hem Splash Screen hem Üst Barda tamamen gizle */
+    #placeholder svg path,
+    #placeholder svg g,
     svg path[d^="M18.244"] {
-      d: path("${TWITTER_BIRD_PATH}") !important;
-      fill: #1DA1F2 !important;
-      color: #1DA1F2 !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-      display: inline !important;
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      fill: transparent !important;
+    }
+
+    /* Splash Screen ve Üst Bar SVG kutularına sadece mavi Twitter kuşu ekle */
+    #placeholder svg {
+      background-image: url("${TWITTER_BIRD_SVG_DATA_URI}") !important;
+      background-repeat: no-repeat !important;
+      background-position: center !important;
+      background-size: contain !important;
+    }
+    h1[role="heading"] svg,
+    a[href="/home"]:not([data-testid="AppTabBar_Home_Link"]) svg,
+    svg:has(path[d^="M18.244"]) {
+      background-image: url("${TWITTER_BIRD_SVG_DATA_URI}") !important;
+      background-repeat: no-repeat !important;
+      background-position: center !important;
+      background-size: contain !important;
+      min-width: 26px !important;
+      min-height: 26px !important;
     }
   `;
   document.documentElement.appendChild(style);

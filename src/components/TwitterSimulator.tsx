@@ -335,26 +335,23 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
 
         {/* Center Primary Feed Column ([data-testid="primaryColumn"]) */}
         <div className="col-span-8 sm:col-span-5 lg:col-span-6 border-r border-neutral-800 flex flex-col">
-          {/* KEPT ON ALL PAGES (Ana Sayfa, Geçmiş, Profil): 1st Row Top Bar (div:first-child) */}
+          {/* KEPT ON ALL PAGES (Ana Sayfa, Geçmiş, Profil): Clean 1st Row Top Bar (Left: Profile Avatar, Center: Logo, Right: Empty) */}
           <div
-            className={`px-4 py-2.5 border-b border-neutral-800/80 bg-black/90 flex items-center justify-between ${
+            className={`px-4 py-3 border-b border-neutral-800/80 bg-black flex items-center justify-between ${
               showXray ? 'ring-1 ring-emerald-500/50' : ''
             }`}
-            title='div:first-child (Her sayfada korunur: Profil Bağlantısı + Twitter Kuşu Logosu)'
+            title='div:first-child (Üst Bar: Sol Profil Resmi + Orta Logo)'
           >
-            {/* Left: User Profile Link / Avatar */}
+            {/* Left: User Circular Profile Avatar */}
             <button
               type="button"
               onClick={() => setActivePage('profile')}
-              className="flex items-center gap-2 text-left hover:opacity-90 transition-opacity cursor-pointer"
-              title='Profil Bağlantısı (Ana Sayfa ve Geçmiş dahil tüm sayfalarda görünür)'
+              className="flex items-center gap-2 hover:opacity-90 transition-opacity cursor-pointer"
+              title='Profil Resmi (Menüyü ve Profili açar)'
             >
-              <div className="w-7 h-7 rounded-full bg-[#1DA1F2]/25 border border-[#1DA1F2] flex items-center justify-center text-[11px] font-bold text-[#1DA1F2] shrink-0">
-                PR
+              <div className="w-8 h-8 rounded-full bg-white text-slate-900 border border-neutral-700 flex items-center justify-center text-xs font-bold shrink-0">
+                <User className="w-4 h-4 text-slate-800" />
               </div>
-              <span className="text-xs font-semibold text-neutral-200">
-                Profil
-              </span>
               {showXray && (
                 <span className="text-[10px] font-mono text-emerald-400">
                   Korundu
@@ -362,12 +359,12 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
               )}
             </button>
 
-            {/* Center: Classic Twitter Bird Logo */}
+            {/* Center: Classic Twitter Bird Logo (or X when Shields off) */}
             <button
               type="button"
               onClick={() => setActivePage('home')}
               className="flex items-center gap-1.5 cursor-pointer"
-              title='svg path[d^="M18.244"] (CSP-uyumlu d: path ile her sayfada görünür)'
+              title='#placeholder svg, h1 svg, a[href="/home"] svg'
             >
               {restoreHeaderBirdLogo ? (
                 <svg
@@ -381,7 +378,7 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
               ) : (
                 <svg
                   viewBox="0 0 24 24"
-                  className="w-5 h-5 fill-white"
+                  className="w-6 h-6 fill-white"
                   aria-label="X Logo"
                 >
                   <path d={X_LOGO_PATH} />
@@ -389,19 +386,13 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
               )}
               {showXray && (
                 <span className="text-[10px] font-mono text-[#1DA1F2]">
-                  opacity: 1
+                  Tek İkon (Bird)
                 </span>
               )}
             </button>
 
-            {/* Right: Current Page Indicator */}
-            <div className="text-[11px] font-mono text-neutral-400">
-              {activePage === 'history'
-                ? 'Geçmiş'
-                : activePage === 'profile'
-                  ? 'Profil'
-                  : 'Ana Sayfa'}
-            </div>
+            {/* Right: Empty spacer so logo stays centered (just like user screenshot) */}
+            <div className="w-8" />
           </div>
 
           {/* 2nd Row: Top Timeline Tabbar (div:first-child + div:has([data-testid="ScrollSnap-List"])) */}
