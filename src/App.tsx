@@ -579,9 +579,10 @@ export default function App() {
                 <div className="flex items-center gap-1 p-1 bg-slate-200/70 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg overflow-x-auto">
                   {(
                     [
-                      { id: 'all', label: 'Tümü (9)' },
-                      { id: 'for-you', label: 'For You Sekmesi' },
+                      { id: 'all', label: `Tümü (${FILTER_RULE_MODULES.length})` },
+                      { id: 'for-you', label: 'Üst Tabbar' },
                       { id: 'grok', label: 'Grok (Grox)' },
+                      { id: 'menu', label: 'Menü Temizliği' },
                       { id: 'logo', label: 'Klasik Logo' },
                     ] as const
                   ).map((tab) => (

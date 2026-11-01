@@ -1,4 +1,4 @@
-export type RuleCategory = 'for-you' | 'grok' | 'logo';
+export type RuleCategory = 'for-you' | 'grok' | 'menu' | 'logo';
 
 export interface FilterRuleModule {
   id: string;
@@ -132,7 +132,6 @@ export const FILTER_RULE_MODULES: FilterRuleModule[] = [
       'x.com,twitter.com##a[href*="/i/grok"]',
       'x.com,twitter.com##a[aria-label="Grok"]',
       'x.com,twitter.com##nav[role="navigation"] a[data-testid*="Grok"]',
-      'x.com,twitter.com##nav[role="navigation"] div:has(> a[href="/i/grok"])',
     ],
   },
   {
@@ -181,6 +180,103 @@ export const FILTER_RULE_MODULES: FilterRuleModule[] = [
       '! Sağ kenar çubuğundaki (Sidebar) Grok öneri ve tanıtım kartlarını gizle',
       'x.com,twitter.com##[data-testid="sidebarColumn"] a[href*="/i/grok"]',
       'x.com,twitter.com##[data-testid="sidebarColumn"] aside:has(a[href*="/i/grok"])',
+    ],
+  },
+  {
+    id: 'hide-menu-calls-premium',
+    category: 'menu',
+    categoryLabel: 'Menü Temizliği',
+    title: 'Menüden "Aramalar" ve "Premium" Öğelerini Kaldır',
+    description:
+      'Sol navigasyon ve mobil profil çekmecesindeki "Aramalar (Calls)" ve "Premium" satırlarını gizler.',
+    defaultEnabled: true,
+    impactTarget: 'a[href*="/calls"], a[href*="/i/premium"]',
+    getRules: () => [
+      '! 3.1 Aramalar (Calls)',
+      'x.com,twitter.com##a[href="/i/calls"]',
+      'x.com,twitter.com##a[href*="/calls"]',
+      'x.com,twitter.com##a[data-testid="calls"]',
+      'x.com,twitter.com##a[aria-label="Aramalar"]',
+      'x.com,twitter.com##a[aria-label="Calls"]',
+      'x.com,twitter.com##a[role="link"]:has-text(/^Aramalar$|^Calls$/)',
+      'x.com,twitter.com##div[role="menuitem"]:has-text(/^Aramalar$|^Calls$/)',
+      '! 3.2 Premium',
+      'x.com,twitter.com##a[href="/i/premium_sign_up"]',
+      'x.com,twitter.com##a[href*="/i/premium"]',
+      'x.com,twitter.com##a[href="/i/verified-choose"]',
+      'x.com,twitter.com##a[data-testid="premium-signup-tab"]',
+      'x.com,twitter.com##a[data-testid="premium-hub-tab"]',
+      'x.com,twitter.com##a[aria-label="Premium"]',
+      'x.com,twitter.com##a[aria-label="X Premium"]',
+      'x.com,twitter.com##a[role="link"]:has-text(/^Premium$/)',
+      'x.com,twitter.com##div[role="menuitem"]:has-text(/^Premium$/)',
+    ],
+  },
+  {
+    id: 'hide-menu-lists-communities',
+    category: 'menu',
+    categoryLabel: 'Menü Temizliği',
+    title: 'Menüden "Listeler" ve "Topluluklar" Öğelerini Kaldır',
+    description:
+      'Sol navigasyon ve mobil profil çekmecesindeki "Listeler (Lists)" ve "Topluluklar (Communities)" satırlarını gizler.',
+    defaultEnabled: true,
+    impactTarget: 'a[href*="/lists"], a[href*="/communities"]',
+    getRules: () => [
+      '! 3.3 Listeler (Lists)',
+      'x.com,twitter.com##a[href*="/lists"]',
+      'x.com,twitter.com##a[data-testid="AppTabBar_Lists_Link"]',
+      'x.com,twitter.com##a[aria-label="Listeler"]',
+      'x.com,twitter.com##a[aria-label="Lists"]',
+      'x.com,twitter.com##a[role="link"]:has-text(/^Listeler$|^Lists$/)',
+      'x.com,twitter.com##div[role="menuitem"]:has-text(/^Listeler$|^Lists$/)',
+      '! 3.4 Topluluklar (Communities)',
+      'x.com,twitter.com##a[href*="/communities"]',
+      'x.com,twitter.com##a[data-testid="communities"]',
+      'x.com,twitter.com##a[data-testid="AppTabBar_Communities_Link"]',
+      'x.com,twitter.com##a[aria-label="Topluluklar"]',
+      'x.com,twitter.com##a[aria-label="Communities"]',
+      'x.com,twitter.com##a[role="link"]:has-text(/^Topluluklar$|^Communities$/)',
+      'x.com,twitter.com##div[role="menuitem"]:has-text(/^Topluluklar$|^Communities$/)',
+    ],
+  },
+  {
+    id: 'hide-menu-creator-orgs-ads',
+    category: 'menu',
+    categoryLabel: 'Menü Temizliği',
+    title: 'Menüden "İçerik Üreticisi Stüdyosu", "Kurumsal" ve "Reklamlar" Öğelerini Kaldır',
+    description:
+      'Menüdeki "İçerik Üreticisi Stüdyosu (Creator Studio)", "Kurumsal (Verified Orgs)" ve "Reklamlar (Ads)" satırlarını gizler; Profil, Geçmiş, Ayarlar ve Çıkış yap korunur.',
+    defaultEnabled: true,
+    impactTarget: 'a[href*="/creators"], a[href*="/verified-orgs"], a[href*="ads."]',
+    getRules: () => [
+      '! 3.5 İçerik Üreticisi Stüdyosu (Creator Studio / Monetization)',
+      'x.com,twitter.com##a[href="/i/jf/creators/studio"]',
+      'x.com,twitter.com##a[href*="/creators"]',
+      'x.com,twitter.com##a[href*="/monetization"]',
+      'x.com,twitter.com##a[data-testid="creatorStudio"]',
+      'x.com,twitter.com##a[data-testid="monetization"]',
+      'x.com,twitter.com##a[role="link"]:has-text(/^İçerik Üreticisi Stü|^Creator Studio|^Para kazanma|^Monetization/)',
+      'x.com,twitter.com##div[role="menuitem"]:has-text(/^İçerik Üreticisi Stü|^Creator Studio|^Para kazanma|^Monetization/)',
+      'x.com,twitter.com##div[role="button"]:has-text(/^İçerik Üreticisi Stü|^Creator Studio/)',
+      '! 3.6 Kurumsal (Verified Organizations / Business)',
+      'x.com,twitter.com##a[href="/i/verified-orgs-signup"]',
+      'x.com,twitter.com##a[href*="/verified-orgs"]',
+      'x.com,twitter.com##a[href*="/i/business"]',
+      'x.com,twitter.com##a[data-testid="vo-signup-tab"]',
+      'x.com,twitter.com##a[aria-label="Kurumsal"]',
+      'x.com,twitter.com##a[aria-label="Verified Orgs"]',
+      'x.com,twitter.com##a[aria-label="Onaylı Kuruluşlar"]',
+      'x.com,twitter.com##a[role="link"]:has-text(/^Kurumsal$|^Onaylı Kuruluşlar$|^Verified Orgs$|^Business$/)',
+      'x.com,twitter.com##div[role="menuitem"]:has-text(/^Kurumsal$|^Onaylı Kuruluşlar$|^Verified Orgs$|^Business$/)',
+      '! 3.7 Reklamlar (Ads)',
+      'x.com,twitter.com##a[href*="ads.x.com"]',
+      'x.com,twitter.com##a[href*="ads.twitter.com"]',
+      'x.com,twitter.com##a[href*="/i/ads"]',
+      'x.com,twitter.com##a[data-testid="ads"]',
+      'x.com,twitter.com##a[aria-label="Reklamlar"]',
+      'x.com,twitter.com##a[aria-label="Ads"]',
+      'x.com,twitter.com##a[role="link"]:has-text(/^Reklamlar$|^Ads$/)',
+      'x.com,twitter.com##div[role="menuitem"]:has-text(/^Reklamlar$|^Ads$/)',
     ],
   },
   {
@@ -247,8 +343,8 @@ export function generateBraveFilterList(config: RepoConfig): string {
 
   const lines: string[] = [
     '[Adblock Plus 2.0]',
-    '! Title: Classic Twitter for Brave Shields (No For You, Following, +Konular & Plus Icon, No Grok, Classic Bird Logo)',
-    '! Description: Twitter/X üzerinde "For You / Sana Özel", "Following / Takip edilenler", "+ Konular" ve sağdaki "+" ikonunu/satırını tamamen kaldırır, Grok (Grox) yapay zeka butonlarını gizler, X logosunu eski klasik Twitter kuşu logosuyla değiştirir.',
+    '! Title: Classic Twitter for Brave Shields (No Tabbar, No Grok, Clean Menu & Classic Bird Logo)',
+    '! Description: Twitter/X üzerinde üstteki "Sana Özel / Takip edilenler / + Konular / +" satırını kaldırır, Grok\'u temizler, menüdeki Aramalar, Premium, Listeler, Topluluklar, İçerik Üreticisi Stüdyosu, Kurumsal ve Reklamlar öğelerini gizler, X logosunu eski klasik Twitter kuşu logosuyla değiştirir.',
     '! Version: 2026.11.01',
     `! Homepage: https://github.com/${config.githubUsername}/${config.repoName}`,
     '! Expires: 1 day (update frequency)',
@@ -267,8 +363,13 @@ export function generateBraveFilterList(config: RepoConfig): string {
       heading: '2. GROK (GROX) BUTONLARINI, SEKME VE PANELLERİNİ KALDIRMA',
     },
     {
+      key: 'menu',
+      heading:
+        '3. MENÜ / ÇEKMECE TEMİZLİĞİ (ARAMALAR, PREMIUM, LİSTELER, TOPLULUKLAR, STÜDYO, KURUMSAL, REKLAMLAR)',
+    },
+    {
       key: 'logo',
-      heading: '3. X LOGOSUNU ESKİ KLASİK TWITTER KUŞU LOGOSUYLA DEĞİŞTİRME',
+      heading: '4. X LOGOSUNU ESKİ KLASİK TWITTER KUŞU LOGOSUYLA DEĞİŞTİRME',
     },
   ];
 
@@ -300,13 +401,14 @@ export function generateUserscript(config: RepoConfig): string {
   const hasPlusIcon = config.enabledRuleIds.includes('hide-plus-icon');
   const hasEntireTabbar = config.enabledRuleIds.includes('hide-entire-tabbar');
   const hasGrok = config.enabledRuleIds.some((id) => id.startsWith('hide-grok'));
+  const hasMenuClean = config.enabledRuleIds.some((id) => id.startsWith('hide-menu-'));
   const hasLogo = config.enabledRuleIds.some((id) => id.startsWith('restore-'));
 
   return `// ==UserScript==
-// @name         Classic Twitter (No For You, Following, +Konular & Plus Icon, No Grok, Old Bird Logo & Favicon)
+// @name         Classic Twitter (No Tabbar, No Grok, Clean Menu & Old Bird Logo)
 // @namespace    https://github.com/${config.githubUsername}/${config.repoName}
-// @version      2.7.0
-// @description  Twitter/X üzerinde "For You", "Takip edilenler", "+ Konular" ve sağdaki "+" ikonunu tamamen kaldırır, Grok (Grox) öğelerini temizler, sol üst logoyu ve tarayıcı sekme ikonunu (favicon) klasik mavi Twitter kuşu yapar.
+// @version      2.8.0
+// @description  Twitter/X üzerinde "For You", "Takip edilenler", "+ Konular" ve sağdaki "+" ikonunu kaldırır, Grok ve gereksiz menü öğelerini (Aramalar, Premium, Listeler, Topluluklar, İçerik Üreticisi Stüdyosu, Kurumsal, Reklamlar) temizler, klasik mavi Twitter kuşu logosunu geri getirir.
 // @author       ${config.githubUsername}
 // @match        https://x.com/*
 // @match        https://twitter.com/*
@@ -388,8 +490,53 @@ export function generateUserscript(config: RepoConfig): string {
     div[data-testid="grokImgGen"],
     button[aria-label*="Grok"],
     [data-testid="grok_button"],
-    nav[role="navigation"] div:has(> a[href="/i/grok"]),
     [data-testid="sidebarColumn"] aside:has(a[href*="/i/grok"]) {
+      display: none !important;
+    }`
+        : ''
+    }
+    ${
+      hasMenuClean
+        ? `/* Menü / Çekmece Temizliği (Aramalar, Premium, Listeler, Topluluklar, İçerik Üreticisi Stüdyosu, Kurumsal, Reklamlar) */
+    a[href="/i/calls"],
+    a[href*="/calls"],
+    a[data-testid="calls"],
+    a[aria-label="Aramalar"],
+    a[aria-label="Calls"],
+    a[href="/i/premium_sign_up"],
+    a[href*="/i/premium"],
+    a[href="/i/verified-choose"],
+    a[data-testid="premium-signup-tab"],
+    a[data-testid="premium-hub-tab"],
+    a[aria-label="Premium"],
+    a[aria-label="X Premium"],
+    a[href*="/lists"],
+    a[data-testid="AppTabBar_Lists_Link"],
+    a[aria-label="Listeler"],
+    a[aria-label="Lists"],
+    a[href*="/communities"],
+    a[data-testid="communities"],
+    a[data-testid="AppTabBar_Communities_Link"],
+    a[aria-label="Topluluklar"],
+    a[aria-label="Communities"],
+    a[href="/i/jf/creators/studio"],
+    a[href*="/creators"],
+    a[href*="/monetization"],
+    a[data-testid="creatorStudio"],
+    a[data-testid="monetization"],
+    a[href="/i/verified-orgs-signup"],
+    a[href*="/verified-orgs"],
+    a[href*="/i/business"],
+    a[data-testid="vo-signup-tab"],
+    a[aria-label="Kurumsal"],
+    a[aria-label="Verified Orgs"],
+    a[aria-label="Onaylı Kuruluşlar"],
+    a[href*="ads.x.com"],
+    a[href*="ads.twitter.com"],
+    a[href*="/i/ads"],
+    a[data-testid="ads"],
+    a[aria-label="Reklamlar"],
+    a[aria-label="Ads"] {
       display: none !important;
     }`
         : ''
@@ -447,10 +594,10 @@ export function generateExtensionManifest(): string {
   return JSON.stringify(
     {
       manifest_version: 3,
-      name: 'Classic Twitter — No Tabbar & Plus Icon, No Grok & Bird Logo',
-      version: '2.7.0',
+      name: 'Classic Twitter — Clean Menu, No Tabbar, No Grok & Bird Logo',
+      version: '2.8.0',
       description:
-        'Twitter/X üzerinde Sana Özel, Takip edilenler, + Konular ve sağdaki + ikonunu, Grok öğelerini kaldırır; eski mavi Twitter kuşu logosunu geri getirir.',
+        'Twitter/X üzerinde Sana Özel, Takip edilenler, + Konular, + ikonu, Grok ve gereksiz menü öğelerini kaldırır; eski mavi Twitter kuşu logosunu geri getirir.',
       content_scripts: [
         {
           matches: ['https://x.com/*', 'https://twitter.com/*'],
@@ -472,7 +619,7 @@ export function generateReadme(config: RepoConfig): string {
 
   return `# Classic Twitter for Brave Shields 🐦
 
-Twitter/X arayüzündeki **"For You" (Sana Özel)**, **"Following" (Takip edilenler)**, **"+ Konular" (+ Topics)** ve satırın en sağındaki **"+" (Artı)** ikonunu/sekme çubuğunu (tabbar) tamamen kaldıran, **Grok (Grox)** yapay zeka butonlarını/panellerini temizleyen ve **X logosunu eski klasik mavi Twitter kuşu (\`#1DA1F2\`)** logosuna dönüştüren **Brave Shields İçerik Filtreleme** listesi ve yardımcı betik paketi.
+Twitter/X arayüzündeki **"For You" (Sana Özel)**, **"Following" (Takip edilenler)**, **"+ Konular" (+ Topics)** ve satırın en sağındaki **"+" (Artı)** ikonunu/sekme çubuğunu (tabbar) tamamen kaldıran, **Grok (Grox)** ve menüdeki gereksiz öğeleri (**Aramalar, Premium, Listeler, Topluluklar, İçerik Üreticisi Stüdyosu, Kurumsal, Reklamlar**) temizleyen ve **X logosunu eski klasik mavi Twitter kuşu (\`#1DA1F2\`)** logosuna dönüştüren **Brave Shields İçerik Filtreleme** listesi.
 
 ---
 
@@ -481,13 +628,12 @@ Twitter/X arayüzündeki **"For You" (Sana Özel)**, **"Following" (Takip edilen
 1. **"Sana Özel", "Takip Edilenler", "+ Konular" ve Sağdaki "+" İkonu Temizliği:**
    - Masaüstü ve Brave Mobil (Android/iOS) üzerinde \`For You (Sana özel)\`, \`Following (Takip edilenler)\`, \`+ Konular\` sekmelerini, satırın en sağındaki \`+\` (artı) butonunu ve alt ayırıcı çizgiyi tamamen kaldırır.
 2. **Grok (Grox) Tam Temizliği:**
-   - Sol menüdeki (\`nav\`) Grok sekmesini kaldırır.
-   - Sağ alt köşedeki açılır Grok sohbet çekmecesini (\`GrokDrawer\`) gizler.
-   - Gönderilerin (\`article\`) sağ üst köşesindeki Grok özet/açıklama butonlarını kaldırır.
-   - Sağ sütundaki Grok tanıtım kartlarını gizler.
-3. **Eski Klasik Twitter Kuşu Logosu (\`#1DA1F2\`):**
+   - Sol menüdeki (\`nav\`) Grok sekmesini, sağ alt köşedeki açılır Grok çekmecesini (\`GrokDrawer\`), gönderi üstü Grok özet butonlarını ve sağ sütun tanıtım kartlarını gizler.
+3. **Sol Menü ve Mobil Profil Çekmecesi Temizliği:**
+   - Menüdeki **Aramalar (Calls)**, **Premium**, **Listeler (Lists)**, **Topluluklar (Communities)**, **İçerik Üreticisi Stüdyosu (Creator Studio)**, **Kurumsal (Verified Orgs)** ve **Reklamlar (Ads)** satırlarını gizler.
+   - **Profil**, **Geçmiş / Yer İşaretleri**, **Ayarlar ve gizlilik** ve **Çıkış yap** öğeleri korunur.
+4. **Eski Klasik Twitter Kuşu Logosu (\`#1DA1F2\`):**
    - Brave Shields \`:style()\` kozmetik kuralı ile sol üst köşedeki, mobil üst çubuktaki ve açılış ekranındaki (\`#placeholder\`) X logosunu orijinal mavi Twitter kuşu vektörüyle değiştirir.
-   - Yardımcı Userscript / Eklenti ile tarayıcı sekme ikonunu (\`favicon\`) ve sayfa başlığını (\`/ Twitter\`) eski haline döndürür.
 
 ---
 

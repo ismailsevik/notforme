@@ -1,6 +1,6 @@
 [Adblock Plus 2.0]
-! Title: Classic Twitter for Brave Shields (No For You, Following, +Konular & Plus Icon, No Grok, Classic Bird Logo)
-! Description: Twitter/X üzerinde üstteki "For You / Sana Özel", "Following / Takip edilenler", "+ Konular" ve sağdaki "+" ikonunu/satırını tamamen kaldırır, Grok (Grox) yapay zeka butonlarını gizler, X logosunu klasik mavi Twitter kuşu logosuyla değiştirir.
+! Title: Classic Twitter for Brave Shields (No Tabbar, No Grok, Clean Menu & Classic Bird Logo)
+! Description: Twitter/X üzerinde üstteki "Sana Özel / Takip edilenler / + Konular / +" satırını kaldırır, Grok'u temizler, menüdeki Aramalar, Premium, Listeler, Topluluklar, İçerik Üreticisi Stüdyosu, Kurumsal ve Reklamlar öğelerini gizler, X logosunu klasik mavi Twitter kuşu yapar.
 ! Version: 2026.11.01
 ! Homepage: https://github.com/classic-twitter/brave-shields-filter
 ! Expires: 1 day (update frequency)
@@ -45,7 +45,6 @@ x.com,twitter.com##a[href="/i/grok"]
 x.com,twitter.com##a[href*="/i/grok"]
 x.com,twitter.com##a[aria-label="Grok"]
 x.com,twitter.com##nav[role="navigation"] a[data-testid*="Grok"]
-x.com,twitter.com##nav[role="navigation"] div:has(> a[href="/i/grok"])
 
 ! Sağ alt köşedeki açılır Grok çekmecesini (Grok Drawer) ve sohbet kutusunu gizle
 x.com,twitter.com##[data-testid="GrokDrawer"]
@@ -63,7 +62,80 @@ x.com,twitter.com##[data-testid="sidebarColumn"] a[href*="/i/grok"]
 x.com,twitter.com##[data-testid="sidebarColumn"] aside:has(a[href*="/i/grok"])
 
 ! ============================================================================
-! 3. X LOGOSUNU ESKİ KLASİK TWITTER KUŞU LOGOSUYLA DEĞİŞTİRME (CSS :style)
+! 3. MENÜ / ÇEKMECE TEMİZLİĞİ (ARAMALAR, PREMIUM, LİSTELER, TOPLULUKLAR,
+!    İÇERİK ÜRETİCİSİ STÜDYOSU, KURUMSAL, REKLAMLAR)
+! ============================================================================
+
+! 3.1 Aramalar (Calls)
+x.com,twitter.com##a[href="/i/calls"]
+x.com,twitter.com##a[href*="/calls"]
+x.com,twitter.com##a[data-testid="calls"]
+x.com,twitter.com##a[aria-label="Aramalar"]
+x.com,twitter.com##a[aria-label="Calls"]
+x.com,twitter.com##a[role="link"]:has-text(/^Aramalar$|^Calls$/)
+x.com,twitter.com##div[role="menuitem"]:has-text(/^Aramalar$|^Calls$/)
+
+! 3.2 Premium
+x.com,twitter.com##a[href="/i/premium_sign_up"]
+x.com,twitter.com##a[href*="/i/premium"]
+x.com,twitter.com##a[href="/i/verified-choose"]
+x.com,twitter.com##a[data-testid="premium-signup-tab"]
+x.com,twitter.com##a[data-testid="premium-hub-tab"]
+x.com,twitter.com##a[aria-label="Premium"]
+x.com,twitter.com##a[aria-label="X Premium"]
+x.com,twitter.com##a[role="link"]:has-text(/^Premium$/)
+x.com,twitter.com##div[role="menuitem"]:has-text(/^Premium$/)
+
+! 3.3 Listeler (Lists)
+x.com,twitter.com##a[href*="/lists"]
+x.com,twitter.com##a[data-testid="AppTabBar_Lists_Link"]
+x.com,twitter.com##a[aria-label="Listeler"]
+x.com,twitter.com##a[aria-label="Lists"]
+x.com,twitter.com##a[role="link"]:has-text(/^Listeler$|^Lists$/)
+x.com,twitter.com##div[role="menuitem"]:has-text(/^Listeler$|^Lists$/)
+
+! 3.4 Topluluklar (Communities)
+x.com,twitter.com##a[href*="/communities"]
+x.com,twitter.com##a[data-testid="communities"]
+x.com,twitter.com##a[data-testid="AppTabBar_Communities_Link"]
+x.com,twitter.com##a[aria-label="Topluluklar"]
+x.com,twitter.com##a[aria-label="Communities"]
+x.com,twitter.com##a[role="link"]:has-text(/^Topluluklar$|^Communities$/)
+x.com,twitter.com##div[role="menuitem"]:has-text(/^Topluluklar$|^Communities$/)
+
+! 3.5 İçerik Üreticisi Stüdyosu (Creator Studio / Monetization)
+x.com,twitter.com##a[href="/i/jf/creators/studio"]
+x.com,twitter.com##a[href*="/creators"]
+x.com,twitter.com##a[href*="/monetization"]
+x.com,twitter.com##a[data-testid="creatorStudio"]
+x.com,twitter.com##a[data-testid="monetization"]
+x.com,twitter.com##a[role="link"]:has-text(/^İçerik Üreticisi Stü|^Creator Studio|^Para kazanma|^Monetization/)
+x.com,twitter.com##div[role="menuitem"]:has-text(/^İçerik Üreticisi Stü|^Creator Studio|^Para kazanma|^Monetization/)
+x.com,twitter.com##div[role="button"]:has-text(/^İçerik Üreticisi Stü|^Creator Studio/)
+
+! 3.6 Kurumsal (Verified Organizations / Business)
+x.com,twitter.com##a[href="/i/verified-orgs-signup"]
+x.com,twitter.com##a[href*="/verified-orgs"]
+x.com,twitter.com##a[href*="/i/business"]
+x.com,twitter.com##a[data-testid="vo-signup-tab"]
+x.com,twitter.com##a[aria-label="Kurumsal"]
+x.com,twitter.com##a[aria-label="Verified Orgs"]
+x.com,twitter.com##a[aria-label="Onaylı Kuruluşlar"]
+x.com,twitter.com##a[role="link"]:has-text(/^Kurumsal$|^Onaylı Kuruluşlar$|^Verified Orgs$|^Business$/)
+x.com,twitter.com##div[role="menuitem"]:has-text(/^Kurumsal$|^Onaylı Kuruluşlar$|^Verified Orgs$|^Business$/)
+
+! 3.7 Reklamlar (Ads)
+x.com,twitter.com##a[href*="ads.x.com"]
+x.com,twitter.com##a[href*="ads.twitter.com"]
+x.com,twitter.com##a[href*="/i/ads"]
+x.com,twitter.com##a[data-testid="ads"]
+x.com,twitter.com##a[aria-label="Reklamlar"]
+x.com,twitter.com##a[aria-label="Ads"]
+x.com,twitter.com##a[role="link"]:has-text(/^Reklamlar$|^Ads$/)
+x.com,twitter.com##div[role="menuitem"]:has-text(/^Reklamlar$|^Ads$/)
+
+! ============================================================================
+! 4. X LOGOSUNU ESKİ KLASİK TWITTER KUŞU LOGOSUYLA DEĞİŞTİRME (CSS :style)
 ! ============================================================================
 
 ! Masaüstü sol üst köşedeki X logosunun orijinal vektör çizimini gizle ve mavi Twitter kuşu ekle

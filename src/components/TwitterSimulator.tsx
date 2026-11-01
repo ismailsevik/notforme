@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import {
   Home,
   Search,
-  Bell,
-  Mail,
   Bookmark,
   User,
   MoreHorizontal,
@@ -16,6 +14,15 @@ import {
   Sparkles,
   CheckCircle2,
   Plus,
+  Phone,
+  BadgeCheck,
+  List,
+  Users,
+  Rocket,
+  Zap,
+  ExternalLink,
+  Settings,
+  LogOut,
 } from 'lucide-react';
 import { CLASSIC_TWITTER_BIRD_PATH, RepoConfig } from '../data/filterRules';
 
@@ -46,6 +53,11 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
   const hideGrokDrawer = isRuleActive('hide-grok-drawer');
   const hideGrokTweetActions = isRuleActive('hide-grok-tweet-actions');
   const hideGrokPromos = isRuleActive('hide-grok-promos');
+
+  const hideMenuCallsPremium = isRuleActive('hide-menu-calls-premium');
+  const hideMenuListsCommunities = isRuleActive('hide-menu-lists-communities');
+  const hideMenuCreatorOrgsAds = isRuleActive('hide-menu-creator-orgs-ads');
+
   const restoreHeaderBirdLogo = isRuleActive('restore-header-bird-logo');
   const restoreBirdPostButton = isRuleActive('restore-bird-post-button');
 
@@ -59,6 +71,9 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
     hideGrokDrawer,
     hideGrokTweetActions,
     hideGrokPromos,
+    hideMenuCallsPremium,
+    hideMenuListsCommunities,
+    hideMenuCreatorOrgsAds,
     restoreHeaderBirdLogo,
     restoreBirdPostButton,
   ].filter(Boolean).length;
@@ -96,7 +111,7 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
           <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-mono">
             <span>https://x.com/home</span>
             <span aria-hidden="true">·</span>
-            <span className="tabular-nums">{blockedElementsCount} kural uygulandı</span>
+            <span className="tabular-nums">{blockedElementsCount} modül aktif</span>
           </div>
         </div>
 
@@ -143,14 +158,14 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
       </div>
 
       {/* Simulated X.com DOM Canvas */}
-      <div className="bg-black text-white grid grid-cols-12 min-h-[510px] relative select-none">
-        {/* Left Navigation Sidebar */}
-        <div className="col-span-3 sm:col-span-3 lg:col-span-3 border-r border-neutral-800 p-3 sm:p-4 flex flex-col justify-between">
-          <div className="space-y-1">
+      <div className="bg-black text-white grid grid-cols-12 min-h-[530px] relative select-none">
+        {/* Left Navigation / Mobile Drawer Menu */}
+        <div className="col-span-4 sm:col-span-4 lg:col-span-3 border-r border-neutral-800 p-3 flex flex-col justify-between">
+          <div className="space-y-0.5">
             {/* Top-Left Brand Logo (h1[role="heading"] a[href="/home"] svg) */}
-            <div className="pb-2">
+            <div className="pb-1.5">
               <div
-                className={`inline-flex items-center gap-2 p-2 rounded-full hover:bg-neutral-900 transition-colors relative ${
+                className={`inline-flex items-center gap-2 p-1.5 rounded-full hover:bg-neutral-900 transition-colors relative ${
                   showXray ? 'ring-1 ring-[#1DA1F2]' : ''
                 }`}
                 title='h1[role="heading"] a[href="/home"] svg'
@@ -158,7 +173,7 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
                 {restoreHeaderBirdLogo ? (
                   <svg
                     viewBox="0 0 24 24"
-                    className="w-7 h-7 transition-transform duration-150"
+                    className="w-6 h-6 transition-transform duration-150"
                     style={{ fill: config.logoColor }}
                     aria-label="Classic Twitter Bird"
                   >
@@ -167,7 +182,7 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
                 ) : (
                   <svg
                     viewBox="0 0 24 24"
-                    className="w-7 h-7 fill-white"
+                    className="w-6 h-6 fill-white"
                     aria-label="X Logo"
                   >
                     <path d={X_LOGO_PATH} />
@@ -175,85 +190,171 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
                 )}
                 {showXray && (
                   <span className="text-[10px] font-mono text-[#1DA1F2] bg-neutral-950/90 px-1.5 py-0.5 rounded border border-[#1DA1F2]/40">
-                    :style(bird-svg)
+                    :style(bird)
                   </span>
                 )}
               </div>
             </div>
 
-            {/* Nav Items */}
-            <div className="flex items-center gap-3 px-3 py-2.5 rounded-full text-sm font-bold text-white bg-neutral-900/60">
-              <Home className="w-5 h-5 shrink-0" />
-              <span className="hidden sm:inline truncate">Ana Sayfa</span>
+            {/* KEPT: Ana Sayfa */}
+            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs font-bold text-white bg-neutral-900/60">
+              <Home className="w-4 h-4 shrink-0" />
+              <span className="truncate">Ana Sayfa</span>
             </div>
 
-            <div className="flex items-center gap-3 px-3 py-2.5 rounded-full text-sm text-neutral-400 hover:bg-neutral-900/40">
-              <Search className="w-5 h-5 shrink-0" />
-              <span className="hidden sm:inline truncate">Keşfet</span>
+            {/* KEPT: Profil */}
+            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs font-semibold text-neutral-200 hover:bg-neutral-900/40">
+              <User className="w-4 h-4 shrink-0" />
+              <span className="truncate">Profil</span>
             </div>
 
-            <div className="flex items-center gap-3 px-3 py-2.5 rounded-full text-sm text-neutral-400 hover:bg-neutral-900/40">
-              <Bell className="w-5 h-5 shrink-0" />
-              <span className="hidden sm:inline truncate">Bildirimler</span>
-            </div>
-
-            <div className="flex items-center gap-3 px-3 py-2.5 rounded-full text-sm text-neutral-400 hover:bg-neutral-900/40">
-              <Mail className="w-5 h-5 shrink-0" />
-              <span className="hidden sm:inline truncate">Mesajlar</span>
-            </div>
-
-            {/* Grok Sidebar Item (a[href="/i/grok"]) */}
+            {/* REMOVED: Grok */}
             {(!hideGrokSidebar || showXray) && (
               <div
-                className={`flex items-center justify-between gap-2 px-3 py-2.5 rounded-full text-sm transition-opacity ${
+                className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs transition-opacity ${
                   hideGrokSidebar && showXray
                     ? 'opacity-35 ring-1 ring-rose-500/60 bg-rose-950/20 line-through text-rose-300'
                     : 'text-neutral-300 hover:bg-neutral-900/40'
                 }`}
-                title='a[href="/i/grok"]'
               >
-                <div className="flex items-center gap-3 min-w-0">
-                  <Sparkles className="w-5 h-5 shrink-0 text-neutral-200" />
-                  <span className="hidden sm:inline truncate font-medium">Grok</span>
-                </div>
-                {showXray && (
-                  <span className="hidden md:inline text-[10px] font-mono text-rose-400">
-                    ##a[href=&quot;/i/grok&quot;]
-                  </span>
-                )}
+                <Sparkles className="w-4 h-4 shrink-0" />
+                <span className="truncate">Grok</span>
               </div>
             )}
 
-            <div className="flex items-center gap-3 px-3 py-2.5 rounded-full text-sm text-neutral-400 hover:bg-neutral-900/40">
-              <Bookmark className="w-5 h-5 shrink-0" />
-              <span className="hidden sm:inline truncate">Yer İşaretleri</span>
+            {/* REMOVED: Aramalar */}
+            {(!hideMenuCallsPremium || showXray) && (
+              <div
+                className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs transition-opacity ${
+                  hideMenuCallsPremium && showXray
+                    ? 'opacity-35 ring-1 ring-rose-500/60 bg-rose-950/20 line-through text-rose-300'
+                    : 'text-neutral-300 hover:bg-neutral-900/40'
+                }`}
+              >
+                <Phone className="w-4 h-4 shrink-0" />
+                <span className="truncate">Aramalar</span>
+              </div>
+            )}
+
+            {/* REMOVED: Premium */}
+            {(!hideMenuCallsPremium || showXray) && (
+              <div
+                className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs transition-opacity ${
+                  hideMenuCallsPremium && showXray
+                    ? 'opacity-35 ring-1 ring-rose-500/60 bg-rose-950/20 line-through text-rose-300'
+                    : 'text-neutral-300 hover:bg-neutral-900/40'
+                }`}
+              >
+                <BadgeCheck className="w-4 h-4 shrink-0" />
+                <span className="truncate">Premium</span>
+              </div>
+            )}
+
+            {/* REMOVED: Listeler */}
+            {(!hideMenuListsCommunities || showXray) && (
+              <div
+                className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs transition-opacity ${
+                  hideMenuListsCommunities && showXray
+                    ? 'opacity-35 ring-1 ring-rose-500/60 bg-rose-950/20 line-through text-rose-300'
+                    : 'text-neutral-300 hover:bg-neutral-900/40'
+                }`}
+              >
+                <List className="w-4 h-4 shrink-0" />
+                <span className="truncate">Listeler</span>
+              </div>
+            )}
+
+            {/* REMOVED: Topluluklar */}
+            {(!hideMenuListsCommunities || showXray) && (
+              <div
+                className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs transition-opacity ${
+                  hideMenuListsCommunities && showXray
+                    ? 'opacity-35 ring-1 ring-rose-500/60 bg-rose-950/20 line-through text-rose-300'
+                    : 'text-neutral-300 hover:bg-neutral-900/40'
+                }`}
+              >
+                <Users className="w-4 h-4 shrink-0" />
+                <span className="truncate">Topluluklar</span>
+              </div>
+            )}
+
+            {/* KEPT: Geçmiş / Yer İşaretleri */}
+            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs font-semibold text-neutral-200 hover:bg-neutral-900/40">
+              <Bookmark className="w-4 h-4 shrink-0" />
+              <span className="truncate">Geçmiş</span>
             </div>
 
-            <div className="flex items-center gap-3 px-3 py-2.5 rounded-full text-sm text-neutral-400 hover:bg-neutral-900/40">
-              <User className="w-5 h-5 shrink-0" />
-              <span className="hidden sm:inline truncate">Profil</span>
+            {/* REMOVED: İçerik Üreticisi Stüdyosu */}
+            {(!hideMenuCreatorOrgsAds || showXray) && (
+              <div
+                className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs transition-opacity ${
+                  hideMenuCreatorOrgsAds && showXray
+                    ? 'opacity-35 ring-1 ring-rose-500/60 bg-rose-950/20 line-through text-rose-300'
+                    : 'text-neutral-300 hover:bg-neutral-900/40'
+                }`}
+              >
+                <Rocket className="w-4 h-4 shrink-0" />
+                <span className="truncate">İçerik Üreticisi Stüd...</span>
+              </div>
+            )}
+
+            {/* REMOVED: Kurumsal */}
+            {(!hideMenuCreatorOrgsAds || showXray) && (
+              <div
+                className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs transition-opacity ${
+                  hideMenuCreatorOrgsAds && showXray
+                    ? 'opacity-35 ring-1 ring-rose-500/60 bg-rose-950/20 line-through text-rose-300'
+                    : 'text-neutral-300 hover:bg-neutral-900/40'
+                }`}
+              >
+                <Zap className="w-4 h-4 shrink-0" />
+                <span className="truncate">Kurumsal</span>
+              </div>
+            )}
+
+            {/* REMOVED: Reklamlar */}
+            {(!hideMenuCreatorOrgsAds || showXray) && (
+              <div
+                className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs transition-opacity ${
+                  hideMenuCreatorOrgsAds && showXray
+                    ? 'opacity-35 ring-1 ring-rose-500/60 bg-rose-950/20 line-through text-rose-300'
+                    : 'text-neutral-300 hover:bg-neutral-900/40'
+                }`}
+              >
+                <ExternalLink className="w-4 h-4 shrink-0" />
+                <span className="truncate">Reklamlar</span>
+              </div>
+            )}
+
+            {/* KEPT: Ayarlar ve gizlilik */}
+            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs font-semibold text-neutral-200 hover:bg-neutral-900/40">
+              <Settings className="w-4 h-4 shrink-0" />
+              <span className="truncate">Ayarlar ve gizlilik</span>
+            </div>
+
+            {/* KEPT: Çıkış yap */}
+            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs font-semibold text-neutral-200 hover:bg-neutral-900/40">
+              <LogOut className="w-4 h-4 shrink-0" />
+              <span className="truncate">Çıkış yap</span>
             </div>
           </div>
 
           {/* Post / Tweet Button */}
-          <div className="pt-3">
+          <div className="pt-2">
             <div
-              className={`w-full py-2.5 px-4 rounded-full text-center text-sm font-bold transition-colors ${
+              className={`w-full py-2 px-3 rounded-full text-center text-xs font-bold transition-colors ${
                 restoreBirdPostButton
                   ? 'bg-[#1DA1F2] text-white'
                   : 'bg-white text-black'
               }`}
             >
-              <span className="hidden sm:inline">
-                {restoreHeaderBirdLogo ? 'Tweetle' : 'Gönder'}
-              </span>
-              <span className="sm:hidden">+</span>
+              <span>{restoreHeaderBirdLogo ? 'Tweetle' : 'Gönder'}</span>
             </div>
           </div>
         </div>
 
         {/* Center Primary Feed Column ([data-testid="primaryColumn"]) */}
-        <div className="col-span-9 sm:col-span-6 lg:col-span-6 border-r border-neutral-800 flex flex-col">
+        <div className="col-span-8 sm:col-span-5 lg:col-span-6 border-r border-neutral-800 flex flex-col">
           {/* Top Timeline Tabbar ([data-testid="ScrollSnap-List"] + right "+" icon) */}
           {(!isTabbarCompletelyHidden || showXray) && (
             <div
@@ -274,11 +375,6 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
                   }`}
                 >
                   <span>Sana özel</span>
-                  {showXray && (
-                    <div className="mt-0.5 text-[10px] font-mono text-rose-400">
-                      :first-child
-                    </div>
-                  )}
                 </div>
               )}
 
@@ -295,11 +391,6 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
                   {!hideFollowingTab && (
                     <div className="mx-auto mt-2 h-1 w-16 rounded-full bg-[#1DA1F2]" />
                   )}
-                  {showXray && (
-                    <div className="mt-0.5 text-[10px] font-mono text-rose-400">
-                      :nth-child(2)
-                    </div>
-                  )}
                 </div>
               )}
 
@@ -313,15 +404,10 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
                   }`}
                 >
                   <span>+ Konular</span>
-                  {showXray && (
-                    <div className="mt-0.5 text-[10px] font-mono text-rose-400">
-                      :nth-child(n+3)
-                    </div>
-                  )}
                 </div>
               )}
 
-              {/* Far Right "+" Icon Button (M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7z) */}
+              {/* Far Right "+" Icon Button */}
               {(!hidePlusIcon || showXray) && (
                 <div
                   className={`px-3 py-3 flex flex-col items-center justify-center shrink-0 transition-opacity ${
@@ -332,11 +418,6 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
                   title='svg:has(path[d^="M11 11V4"])'
                 >
                   <Plus className="w-4 h-4" />
-                  {showXray && (
-                    <span className="text-[9px] font-mono text-rose-400 mt-0.5">
-                      + ikonu
-                    </span>
-                  )}
                 </div>
               )}
             </div>
@@ -378,7 +459,7 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
                   </div>
 
                   <p className="mt-1.5 text-sm text-neutral-200 leading-relaxed">
-                    Üst satırdaki &quot;Sana özel&quot;, &quot;Takip edilenler&quot;, &quot;+ Konular&quot; ve en sağdaki &quot;+&quot; ikonu (alt çizgisiyle birlikte) tamamen kaldırıldı!
+                    Menüdeki <strong>Aramalar, Premium, Listeler, Topluluklar, İçerik Üreticisi Stüdyosu, Kurumsal</strong> ve <strong>Reklamlar</strong> öğeleri de kaldırıldı. Yalnızca <strong>Profil, Geçmiş, Ayarlar ve gizlilik</strong> ve <strong>Çıkış yap</strong> korundu.
                   </p>
 
                   <div className="mt-3 flex items-center justify-between max-w-xs text-neutral-500 text-xs font-mono tabular-nums">
