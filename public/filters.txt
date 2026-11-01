@@ -1,29 +1,29 @@
 [Adblock Plus 2.0]
-! Title: Classic Twitter for Brave Shields (No Tabbar & Gray Box, Keep Profile & Bird Logo, No Grok)
-! Description: Twitter/X üzerinde üstteki "Sana Özel / Takip edilenler / + Konular / +" sekme satırını tamamen kaldırır, üst bardaki Profil resmini ve klasik mavi Twitter kuşu logosunu korur, Splash Screen'de çift logo sorununu önler ve Grok'u temizler.
-! Version: 2026.11.03
+! Title: Classic Twitter for Brave Shields (Keep Top Bar, Hide For You/Following/Topics/+ Tabbar, No Grok, Bird Logo)
+! Description: En üst barı (Profil resmi ve Logo) korur, hemen altındaki For You / Following / Topic + ikonlu tabbar satırını ve Grok'u kaldırır, Splash Screen çift ikon sorununu çözer.
+! Version: 2026.11.04
 ! Homepage: https://github.com/classic-twitter/brave-shields-filter
 ! Expires: 1 day (update frequency)
 ! License: MIT
 
 ! ============================================================================
-! 1. SADECE ÜST SEKME SATIRI ("FOR YOU / SANA ÖZEL", "TAKİP EDİLENLER",
-!    "+ KONULAR", "+" KUTUSU) KALDIRMA (ÜST BAR PROFİL VE LOGO KORUNUR)
+! 1. EN ÜST BAR GÖRÜNÜR; BİR ALTINDAKİ "FOR YOU / FOLLOWING / TOPIC / +"
+!    SEKME ÇUBUĞU (TABBAR) GİZLENİR
 ! ============================================================================
 
-! Yalnızca 1. satırın (Sol: Profil resmi, Orta: Logo) altındaki 2. satırı (Sekme çubuğunu) gizle.
-! 1. satır (div:first-child) ASLA seçilmez; üst bar tam istediğiniz gibi sade kalır.
-x.com,twitter.com##div:first-child + div:has([data-testid="ScrollSnap-List"]):not(:has(article)):not(:has(section)):not(:has([data-testid="cellInnerDiv"]))
-x.com,twitter.com##div:first-child + nav:has([data-testid="ScrollSnap-List"])
-x.com,twitter.com##nav:has([data-testid="ScrollSnap-List"]):not(:has([data-testid="TopNavBar"])):not(:has([data-testid="DashButton_ProfileIcon_Link"])):not(:has([data-testid^="UserAvatar-Container"]))
+! En üst bar (img profil resmi ve M18.244 logo içeren 1. satır) kesinlikle korunur.
+! Yalnızca onun bir altındaki For You, Following, Topic ve + ikonu olan 2. satır (tabbar) gizlenir.
+x.com,twitter.com##div:first-child + div:has([data-testid="ScrollSnap-List"]):not(:has(img)):not(:has(path[d^="M18.244"])):not(:has(article)):not(:has(section)):not(:has([data-testid="cellInnerDiv"]))
+x.com,twitter.com##div:first-child + nav:has([data-testid="ScrollSnap-List"]):not(:has(img)):not(:has(path[d^="M18.244"]))
+x.com,twitter.com##nav:has([data-testid="ScrollSnap-List"]):not(:has(img)):not(:has(path[d^="M18.244"]))
 x.com,twitter.com##div[role="tablist"]:has([data-testid="ScrollSnap-List"])
-x.com,twitter.com##[data-testid="ScrollSnap-SwipeableList"]
-x.com,twitter.com##[data-testid="ScrollSnap-List"]
-
-! Sekme satırının sağındaki "+" ikonu ve gri kare kutusu (Üst bardaki profil ve logoya dokunmaz)
 x.com,twitter.com##div[role="tablist"]:has([data-testid="ScrollSnap-List"]) ~ *
+x.com,twitter.com##[data-testid="ScrollSnap-SwipeableList"]
 x.com,twitter.com##[data-testid="ScrollSnap-SwipeableList"] ~ *
+x.com,twitter.com##[data-testid="ScrollSnap-List"]
 x.com,twitter.com##[data-testid="ScrollSnap-List"] ~ *
+
+! Tabbar satırının sağındaki "+" ikonu ve gri kutusu (En üst bara dokunmaz)
 x.com,twitter.com##div:has(> a:only-child svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"])
 x.com,twitter.com##div:has(> button:only-child svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"])
 x.com,twitter.com##div:has(> div[role="button"]:only-child svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"])
@@ -31,16 +31,8 @@ x.com,twitter.com##a:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(
 x.com,twitter.com##button:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"])
 x.com,twitter.com##div[role="button"]:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"])
 
-! Satır içindeki tüm sekmeleri (1. Sana özel, 2. Takip edilenler, 3. + Konular) ve kaydırma oklarını gizle
-x.com,twitter.com##[data-testid="ScrollSnap-List"] > div[role="presentation"]
-x.com,twitter.com##[data-testid="ScrollSnap-List"] a[href*="/topics"]
-x.com,twitter.com##[data-testid="ScrollSnap-List"] a[href*="/lists"]
-x.com,twitter.com##[data-testid="ScrollSnap-nextButtonWrapper"]
-x.com,twitter.com##[data-testid="ScrollSnap-prevButtonWrapper"]
-
 ! ============================================================================
-! 2. SADECE GROK (GROX) BUTONLARINI, SEKME VE PANELLERİNİ KALDIRMA
-!    (SOL / MOBİL MENÜDEKİ DİĞER HİÇBİR ÖĞEYE DOKUNULMAZ)
+! 2. GROK (GROX) BUTONLARINI, SEKME VE PANELLERİNİ KALDIRMA
 ! ============================================================================
 
 x.com,twitter.com##a[href="/i/grok"]
@@ -58,22 +50,17 @@ x.com,twitter.com##[data-testid="sidebarColumn"] a[href*="/i/grok"]
 x.com,twitter.com##[data-testid="sidebarColumn"] aside:has(a[href*="/i/grok"])
 
 ! ============================================================================
-! 3. X LOGOSUNU ESKİ KLASİK TWITTER KUŞU LOGOSUYLA DEĞİŞTİRME
-!    (ÜST BAR VE SPLASH SCREEN - ÇİFT İKON SORUNU OLMADAN)
+! 3. KLASİK TWITTER KUŞU LOGOSU (SPLASH SCREEN ÇİFT İKON SORUNU DÜZELTİLDİ)
 ! ============================================================================
 
-! 3.1 Orijinal X vektör çizimini (path) hem Splash Screen (#placeholder) hem de Üst Barda tamamen gizle
-! (Böylece Splash Screen'de hem X hem Twitter kuşunun üst üste binmesi kesin olarak engellenir)
-x.com,twitter.com###placeholder svg path
-x.com,twitter.com###placeholder svg g
-x.com,twitter.com##svg path[d^="M18.244"]
-x.com,twitter.com###placeholder svg path:style(display: none !important; opacity: 0 !important; visibility: hidden !important; fill: transparent !important;)
-x.com,twitter.com##svg path[d^="M18.244"]:style(display: none !important; opacity: 0 !important; visibility: hidden !important; fill: transparent !important;)
-
-! 3.2 Açılış / Yükleme ekranındaki (Splash Screen - #placeholder) SVG kutusuna sadece mavi Twitter kuşu ekle
+! 3.1 Splash Screen (#placeholder): Orijinal X çizimini saydam yap, sadece Twitter kuşu görünsün
+x.com,twitter.com###placeholder svg path:style(opacity: 0 !important;)
 x.com,twitter.com###placeholder svg:style(background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231DA1F2'%3E%3Cpath d='M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z'/%3E%3C/svg%3E") !important; background-repeat: no-repeat !important; background-position: center !important; background-size: contain !important;)
 
-! 3.3 Mobil Üst Bar ve Masaüstü Sol Üst Bar'daki X logosunun yerine mavi Twitter kuşu ekle
-x.com,twitter.com##h1[role="heading"] svg:style(background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231DA1F2'%3E%3Cpath d='M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z'/%3E%3C/svg%3E") !important; background-repeat: no-repeat !important; background-position: center !important; background-size: contain !important; min-width: 28px !important; min-height: 28px !important;)
-x.com,twitter.com##a[href="/home"]:not([data-testid="AppTabBar_Home_Link"]) svg:style(background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231DA1F2'%3E%3Cpath d='M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z'/%3E%3C/svg%3E") !important; background-repeat: no-repeat !important; background-position: center !important; background-size: contain !important; min-width: 26px !important; min-height: 26px !important;)
-x.com,twitter.com##svg:has(path[d^="M18.244"]):style(background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231DA1F2'%3E%3Cpath d='M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z'/%3E%3C/svg%3E") !important; background-repeat: no-repeat !important; background-position: center !important; background-size: contain !important; min-width: 26px !important; min-height: 26px !important;)
+! 3.2 Üst Bar Logosu: Yalnızca Twitter kuşunun eklendiği seçicilerde X çizimini saydamlaştır (En üst bar logosu asla kaybolmaz)
+x.com,twitter.com##h1[role="heading"] svg path:style(opacity: 0 !important;)
+x.com,twitter.com##h1[role="heading"] svg:style(background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231DA1F2'%3E%3Cpath d='M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z'/%3E%3C/svg%3E") !important; background-repeat: no-repeat !important; background-position: center !important; background-size: contain !important; width: 28px !important; height: 28px !important; min-width: 28px !important; min-height: 28px !important;)
+x.com,twitter.com##a[href="/home"]:not([data-testid="AppTabBar_Home_Link"]) svg path:style(opacity: 0 !important;)
+x.com,twitter.com##a[href="/home"]:not([data-testid="AppTabBar_Home_Link"]) svg:style(background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231DA1F2'%3E%3Cpath d='M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z'/%3E%3C/svg%3E") !important; background-repeat: no-repeat !important; background-position: center !important; background-size: contain !important; width: 28px !important; height: 28px !important; min-width: 28px !important; min-height: 28px !important;)
+x.com,twitter.com##[data-testid="TopNavBar"] svg path[d^="M18.244"]:style(opacity: 0 !important;)
+x.com,twitter.com##[data-testid="TopNavBar"] svg:style(background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231DA1F2'%3E%3Cpath d='M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z'/%3E%3C/svg%3E") !important; background-repeat: no-repeat !important; background-position: center !important; background-size: contain !important; width: 28px !important; height: 28px !important; min-width: 28px !important; min-height: 28px !important;)
