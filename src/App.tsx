@@ -582,7 +582,6 @@ export default function App() {
                       { id: 'all', label: `Tümü (${FILTER_RULE_MODULES.length})` },
                       { id: 'for-you', label: 'Üst Tabbar' },
                       { id: 'grok', label: 'Grok (Grox)' },
-                      { id: 'menu', label: 'Menü Temizliği' },
                       { id: 'logo', label: 'Klasik Logo' },
                     ] as const
                   ).map((tab) => (

@@ -1,4 +1,4 @@
-export type RuleCategory = 'for-you' | 'grok' | 'menu' | 'logo';
+export type RuleCategory = 'for-you' | 'grok' | 'logo';
 
 export interface FilterRuleModule {
   id: string;
@@ -32,15 +32,16 @@ export const FILTER_RULE_MODULES: FilterRuleModule[] = [
     id: 'hide-entire-tabbar',
     category: 'for-you',
     categoryLabel: 'Üst Tabbar Temizliği',
-    title: 'Üst Sekme Satırını (Sana Özel + Takip Edilenler + Konular) Kaldır (Profil Resmi & Logo Korunur)',
+    title: 'Üst Sekme Satırını (Sana Özel + Takip Edilenler + Konular) Kaldır (Profil & Logo Korunur)',
     description:
-      '1. satırdaki Profil Resmini (UserAvatar / TopNavBar) ve ortadaki Twitter kuşu logosunu kesinlikle korur; yalnızca 2. satırdaki sekme çubuğunu gizler.',
+      '1. satırdaki (div:first-child) Profil bağlantısını/resmini ve ortadaki Twitter kuşu logosunu her sayfada (Ana Sayfa, Geçmiş, Ayarlar vb.) korur; yalnızca 2. satırdaki sekme çubuğunu gizler.',
     defaultEnabled: true,
-    impactTarget: 'div:has([data-testid="ScrollSnap-List"]):not(:has([data-testid="TopNavBar"]))',
+    impactTarget: 'div:first-child + div:has([data-testid="ScrollSnap-List"])',
     getRules: () => [
-      '! Yalnızca 2. satırdaki sekme çubuğunu (ScrollSnap-List satırı ve sağdaki gri + kutusu) tamamen gizle.',
-      '! 1. satırdaki Profil Resmi (UserAvatar / DashButton_ProfileIcon_Link), Üst Bar (TopNavBar) ve Twitter Logosu (M18.244) kesinlikle korunur!',
-      'x.com,twitter.com##div:has([data-testid="ScrollSnap-List"]):not(:has([data-testid="TopNavBar"])):not(:has([data-testid="DashButton_ProfileIcon_Link"])):not(:has([data-testid^="UserAvatar-Container"])):not(:has(img[src*="profile_images"])):not(:has(svg path[d^="M18.244"])):not(:has(h1)):not(:has(section)):not(:has(article)):not(:has([data-testid="cellInnerDiv"])):not(:has(main)):not([data-testid="primaryColumn"])',
+      '! Yalnızca 1. satırın (Profil bağlantısı + Twitter logosu) altındaki 2. satırı (Sekme çubuğunu) gizle.',
+      '! div:first-child (Üst bar: Profil resmi ve Logo) ASLA seçilmez ve her sayfada görünür kalır.',
+      'x.com,twitter.com##div:first-child + div:has([data-testid="ScrollSnap-List"]):not(:has(article)):not(:has(section)):not(:has([data-testid="cellInnerDiv"]))',
+      'x.com,twitter.com##div:first-child + nav:has([data-testid="ScrollSnap-List"])',
       'x.com,twitter.com##nav:has([data-testid="ScrollSnap-List"]):not(:has([data-testid="TopNavBar"])):not(:has([data-testid="DashButton_ProfileIcon_Link"])):not(:has([data-testid^="UserAvatar-Container"]))',
       'x.com,twitter.com##div[role="tablist"]:has([data-testid="ScrollSnap-List"])',
       'x.com,twitter.com##[data-testid="ScrollSnap-SwipeableList"]',
@@ -53,17 +54,17 @@ export const FILTER_RULE_MODULES: FilterRuleModule[] = [
     categoryLabel: 'Üst Tabbar Temizliği',
     title: 'Satırın Sağındaki "+" Gri Kutu Alanını ve Butonunu Kaldır',
     description:
-      'Sekme satırının en sağında kalan gri kare kutuyu (a / button / div kapsayıcısını) ve içindeki "+" ikonunu tamamen gizler; Profil resmine ve Ayarlar sayfasına dokunmaz.',
+      'Sekme satırının en sağında kalan gri kare kutuyu (:only-child kapsayıcısını) ve içindeki "+" ikonunu tamamen gizler; üst bardaki Profil bağlantısına ve logoya dokunmaz.',
     defaultEnabled: true,
-    impactTarget: 'div[role="tablist"]:has([data-testid="ScrollSnap-List"]) ~ *',
+    impactTarget: 'div:has(> a:only-child svg path[d^="M11 11V4"])',
     getRules: () => [
-      '! Sekme satırının en sağında kalan gri kutuyu ve "+" (Artı) butonunu kapsayıcısıyla birlikte gizle (Profil resmine dokunmaz)',
+      '! Sekme satırının en sağında kalan gri kutuyu ve "+" (Artı) butonunu gizle (Üst bardaki profil ve logoya dokunmaz)',
       'x.com,twitter.com##div[role="tablist"]:has([data-testid="ScrollSnap-List"]) ~ *',
       'x.com,twitter.com##[data-testid="ScrollSnap-SwipeableList"] ~ *',
       'x.com,twitter.com##[data-testid="ScrollSnap-List"] ~ *',
-      'x.com,twitter.com##div:has(> a > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has([data-testid^="UserAvatar-Container"])):not(:has(section)):not(:has(article))',
-      'x.com,twitter.com##div:has(> button > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has([data-testid^="UserAvatar-Container"])):not(:has(section)):not(:has(article))',
-      'x.com,twitter.com##div:has(> div[role="button"] > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has([data-testid^="UserAvatar-Container"])):not(:has(section)):not(:has(article))',
+      'x.com,twitter.com##div:has(> a:only-child svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"])',
+      'x.com,twitter.com##div:has(> button:only-child svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"])',
+      'x.com,twitter.com##div:has(> div[role="button"]:only-child svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"])',
       'x.com,twitter.com##a:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"]):not([href="/compose/post"])',
       'x.com,twitter.com##button:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"])',
       'x.com,twitter.com##div[role="button"]:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"])',
@@ -119,13 +120,13 @@ export const FILTER_RULE_MODULES: FilterRuleModule[] = [
     id: 'hide-grok-sidebar',
     category: 'grok',
     categoryLabel: 'Grok Temizliği',
-    title: 'Sol Menüdeki Grok (Grox) Sekmesini Kaldır',
+    title: 'Navigasyon Çubuğundaki Grok (Grox) Sekmesini Kaldır',
     description:
-      'Sol navigasyon menüsünde yer alan Grok bağlantısını ve ikonunu masaüstü ve mobil görünümden tamamen temizler.',
+      'Navigasyon çubuğunda yer alan Grok bağlantısını ve ikonunu masaüstü ve mobil görünümden tamamen temizler (Profil çekmecesi menüsü olduğu gibi korunur).',
     defaultEnabled: true,
     impactTarget: 'nav[role="navigation"] a[href="/i/grok"]',
     getRules: () => [
-      '! Sol menüdeki (Sidebar) Grok navigasyon bağlantısını gizle',
+      '! Sol menüdeki ve mobil alt bardaki Grok navigasyon bağlantısını gizle',
       'x.com,twitter.com##a[href="/i/grok"]',
       'x.com,twitter.com##a[href*="/i/grok"]',
       'x.com,twitter.com##a[aria-label="Grok"]',
@@ -181,140 +182,19 @@ export const FILTER_RULE_MODULES: FilterRuleModule[] = [
     ],
   },
   {
-    id: 'hide-menu-calls-premium',
-    category: 'menu',
-    categoryLabel: 'Menü Temizliği',
-    title: 'Menüden "Aramalar" ve "Premium" Öğelerini Kaldır',
-    description:
-      'Sol navigasyon ve mobil profil çekmecesindeki "Aramalar (Calls)" ve "Premium" satırlarını gizler.',
-    defaultEnabled: true,
-    impactTarget: 'a[href*="/calls"], a[href*="/i/premium"]',
-    getRules: () => [
-      '! 3.1 Aramalar (Calls)',
-      'x.com,twitter.com##a[href="/i/calls"]',
-      'x.com,twitter.com##a[href*="/calls"]',
-      'x.com,twitter.com##a[data-testid="calls"]',
-      'x.com,twitter.com##a[aria-label="Aramalar"]',
-      'x.com,twitter.com##a[aria-label="Calls"]',
-      'x.com,twitter.com##a[role="link"]:has-text(/^Aramalar$|^Calls$/)',
-      'x.com,twitter.com##div[role="menuitem"]:has-text(/^Aramalar$|^Calls$/)',
-      '! 3.2 Premium',
-      'x.com,twitter.com##a[href="/i/premium_sign_up"]',
-      'x.com,twitter.com##a[href*="/i/premium"]',
-      'x.com,twitter.com##a[href="/i/verified-choose"]',
-      'x.com,twitter.com##a[data-testid="premium-signup-tab"]',
-      'x.com,twitter.com##a[data-testid="premium-hub-tab"]',
-      'x.com,twitter.com##a[aria-label="Premium"]',
-      'x.com,twitter.com##a[aria-label="X Premium"]',
-      'x.com,twitter.com##a[role="link"]:has-text(/^Premium$/)',
-      'x.com,twitter.com##div[role="menuitem"]:has-text(/^Premium$/)',
-    ],
-  },
-  {
-    id: 'hide-menu-lists-communities',
-    category: 'menu',
-    categoryLabel: 'Menü Temizliği',
-    title: 'Menüden "Listeler" ve "Topluluklar" Öğelerini Kaldır',
-    description:
-      'Sol navigasyon ve mobil profil çekmecesindeki "Listeler (Lists)" ve "Topluluklar (Communities)" satırlarını gizler.',
-    defaultEnabled: true,
-    impactTarget: 'a[href*="/lists"], a[href*="/communities"]',
-    getRules: () => [
-      '! 3.3 Listeler (Lists)',
-      'x.com,twitter.com##a[href*="/lists"]',
-      'x.com,twitter.com##a[data-testid="AppTabBar_Lists_Link"]',
-      'x.com,twitter.com##a[aria-label="Listeler"]',
-      'x.com,twitter.com##a[aria-label="Lists"]',
-      'x.com,twitter.com##a[role="link"]:has-text(/^Listeler$|^Lists$/)',
-      'x.com,twitter.com##div[role="menuitem"]:has-text(/^Listeler$|^Lists$/)',
-      '! 3.4 Topluluklar (Communities)',
-      'x.com,twitter.com##a[href*="/communities"]',
-      'x.com,twitter.com##a[data-testid="communities"]',
-      'x.com,twitter.com##a[data-testid="AppTabBar_Communities_Link"]',
-      'x.com,twitter.com##a[aria-label="Topluluklar"]',
-      'x.com,twitter.com##a[aria-label="Communities"]',
-      'x.com,twitter.com##a[role="link"]:has-text(/^Topluluklar$|^Communities$/)',
-      'x.com,twitter.com##div[role="menuitem"]:has-text(/^Topluluklar$|^Communities$/)',
-    ],
-  },
-  {
-    id: 'hide-menu-creator-orgs-ads',
-    category: 'menu',
-    categoryLabel: 'Menü Temizliği',
-    title: 'Menüden "İçerik Üreticisi Stüdyosu", "Kurumsal" ve "Reklamlar" Öğelerini Kaldır',
-    description:
-      'Menüdeki "İçerik Üreticisi Stüdyosu (Creator Studio)", "Kurumsal (Verified Orgs)" ve "Reklamlar (Ads)" satırlarını gizler; Profil, Geçmiş, Ayarlar ve Çıkış yap korunur.',
-    defaultEnabled: true,
-    impactTarget: 'a[href*="/creators"], a[href*="/verified-orgs"], a[href*="ads."]',
-    getRules: () => [
-      '! 3.5 İçerik Üreticisi Stüdyosu (Creator Studio / Monetization)',
-      'x.com,twitter.com##a[href="/i/jf/creators/studio"]',
-      'x.com,twitter.com##a[href*="/creators"]',
-      'x.com,twitter.com##a[href*="/monetization"]',
-      'x.com,twitter.com##a[data-testid="creatorStudio"]',
-      'x.com,twitter.com##a[data-testid="monetization"]',
-      'x.com,twitter.com##a[role="link"]:has-text(/^İçerik Üreticisi Stü|^Creator Studio|^Para kazanma|^Monetization/)',
-      'x.com,twitter.com##div[role="menuitem"]:has-text(/^İçerik Üreticisi Stü|^Creator Studio|^Para kazanma|^Monetization/)',
-      'x.com,twitter.com##div[role="button"]:has-text(/^İçerik Üreticisi Stü|^Creator Studio/)',
-      '! 3.6 Kurumsal (Verified Organizations / Business)',
-      'x.com,twitter.com##a[href="/i/verified-orgs-signup"]',
-      'x.com,twitter.com##a[href*="/verified-orgs"]',
-      'x.com,twitter.com##a[href*="/i/business"]',
-      'x.com,twitter.com##a[data-testid="vo-signup-tab"]',
-      'x.com,twitter.com##a[aria-label="Kurumsal"]',
-      'x.com,twitter.com##a[aria-label="Verified Orgs"]',
-      'x.com,twitter.com##a[aria-label="Onaylı Kuruluşlar"]',
-      'x.com,twitter.com##a[role="link"]:has-text(/^Kurumsal$|^Onaylı Kuruluşlar$|^Verified Orgs$|^Business$/)',
-      'x.com,twitter.com##div[role="menuitem"]:has-text(/^Kurumsal$|^Onaylı Kuruluşlar$|^Verified Orgs$|^Business$/)',
-      '! 3.7 Reklamlar (Ads)',
-      'x.com,twitter.com##a[href*="ads.x.com"]',
-      'x.com,twitter.com##a[href*="ads.twitter.com"]',
-      'x.com,twitter.com##a[href*="/i/ads"]',
-      'x.com,twitter.com##a[data-testid="ads"]',
-      'x.com,twitter.com##a[aria-label="Reklamlar"]',
-      'x.com,twitter.com##a[aria-label="Ads"]',
-      'x.com,twitter.com##a[role="link"]:has-text(/^Reklamlar$|^Ads$/)',
-      'x.com,twitter.com##div[role="menuitem"]:has-text(/^Reklamlar$|^Ads$/)',
-    ],
-  },
-  {
     id: 'restore-header-bird-logo',
     category: 'logo',
     categoryLabel: 'Klasik Twitter Logosu',
-    title: 'Sol Üst X Logosunu Eski Klasik Twitter Kuşu Yap',
+    title: 'Tüm X Logolarını Eski Klasik Twitter Kuşu Yap (CSP Uyumlu Vektör Dönüşümü)',
     description:
-      'Brave Shields :style() kozmetik kuralı ile X SVG çizimini saydamlaştırır ve yerine klasik Twitter kuşu vektörünü yerleştirir.',
+      'X SVG path öğesini gizlemeden (opacity: 1) doğrudan CSS d: path() ile klasik Twitter kuşu vektörüne dönüştürür. CSP engeline takılmaz ve her sayfada görünür.',
     defaultEnabled: true,
-    impactTarget: 'h1[role="heading"] a[href="/home"] svg',
-    getRules: (logoHex: string) => {
-      const dataUri = buildBirdSvgDataUri(logoHex);
-      return [
-        '! Masaüstü sol üst köşedeki X logosunun orijinal vektör çizimini saydam yap (boyutu çökmesin) ve mavi Twitter kuşu ekle',
-        'x.com,twitter.com##h1[role="heading"] a[href="/home"] svg path:style(opacity: 0 !important;)',
-        `x.com,twitter.com##h1[role="heading"] a[href="/home"] svg:style(background-image: url("${dataUri}") !important; background-repeat: no-repeat !important; background-position: center !important; background-size: contain !important; width: 30px !important; height: 30px !important; min-width: 30px !important; min-height: 30px !important;)`,
-      ];
-    },
-  },
-  {
-    id: 'restore-splash-bird-logo',
-    category: 'logo',
-    categoryLabel: 'Klasik Twitter Logosu',
-    title: 'Mobil Üst Bar (TopNavBar) ve Yükleme Ekranı Logosunu Kuş Yap',
-    description:
-      'Mobil görünüm üst çubuğunun (TopNavBar) ortasındaki X ikonunu ve açılış ekranındaki X logosunu sabit boyutlu klasik Twitter kuşuyla değiştirir.',
-    defaultEnabled: true,
-    impactTarget: 'header svg:has(path[d^="M18.244"]), #placeholder svg',
-    getRules: (logoHex: string) => {
-      const dataUri = buildBirdSvgDataUri(logoHex);
-      return [
-        '! Açılış / Yükleme ekranındaki (Splash Screen) X logosunu klasik Twitter kuşuyla değiştir',
-        'x.com,twitter.com###placeholder svg path:style(opacity: 0 !important;)',
-        `x.com,twitter.com###placeholder svg:style(background-image: url("${dataUri}") !important; background-repeat: no-repeat !important; background-position: center !important; background-size: contain !important;)`,
-        '! Mobil üst bar (TopNavBar) ortasındaki X logosunu klasik Twitter kuşuyla değiştir',
-        'x.com,twitter.com##header svg path[d^="M18.244"]:style(opacity: 0 !important;)',
-        `x.com,twitter.com##header svg:has(path[d^="M18.244"]):style(background-image: url("${dataUri}") !important; background-repeat: no-repeat !important; background-position: center !important; background-size: contain !important; width: 28px !important; height: 28px !important; min-width: 28px !important; min-height: 28px !important;)`,
-      ];
-    },
+    impactTarget: 'svg path[d^="M18.244"]',
+    getRules: (logoHex: string) => [
+      '! Orijinal X SVG path öğesini gizlemeden (opacity: 1) doğrudan klasik Twitter kuşu vektörüne (d: path) dönüştürür.',
+      `x.com,twitter.com##svg path[d^="M18.244"]:style(fill: ${logoHex} !important; color: ${logoHex} !important; opacity: 1 !important; visibility: visible !important; display: inline !important;)`,
+      `x.com,twitter.com##svg path[d^="M18.244"]:style(d: path("${CLASSIC_TWITTER_BIRD_PATH}") !important; fill: ${logoHex} !important; color: ${logoHex} !important; opacity: 1 !important; visibility: visible !important;)`,
+    ],
   },
   {
     id: 'restore-bird-post-button',
@@ -340,9 +220,9 @@ export function generateBraveFilterList(config: RepoConfig): string {
 
   const lines: string[] = [
     '[Adblock Plus 2.0]',
-    '! Title: Classic Twitter for Brave Shields (No Tabbar & Gray Box, Keep Profile & Bird Logo, No Grok, Clean Menu)',
-    '! Description: Twitter/X üzerinde üstteki "Sana Özel / Takip edilenler / + Konular / +" sekme satırını tamamen kaldırır, Profil resmini ve klasik mavi Twitter kuşu logosunu korur, Ayarlar sayfasını bozmaz, Grok\'u ve gereksiz menü öğelerini temizler.',
-    '! Version: 2026.11.01',
+    '! Title: Classic Twitter for Brave Shields (No Tabbar & Gray Box, Keep Profile & Bird Logo, No Grok)',
+    '! Description: Twitter/X üzerinde üstteki "Sana Özel / Takip edilenler / + Konular / +" sekme satırını tamamen kaldırır, Profil bağlantısını/resmini, menüyü ve klasik mavi Twitter kuşu logosunu korur, Grok\'u temizler.',
+    '! Version: 2026.11.02',
     `! Homepage: https://github.com/${config.githubUsername}/${config.repoName}`,
     '! Expires: 1 day (update frequency)',
     '! License: MIT',
@@ -360,13 +240,8 @@ export function generateBraveFilterList(config: RepoConfig): string {
       heading: '2. GROK (GROX) BUTONLARINI, SEKME VE PANELLERİNİ KALDIRMA',
     },
     {
-      key: 'menu',
-      heading:
-        '3. MENÜ / ÇEKMECE TEMİZLİĞİ (ARAMALAR, PREMIUM, LİSTELER, TOPLULUKLAR, STÜDYO, KURUMSAL, REKLAMLAR)',
-    },
-    {
       key: 'logo',
-      heading: '4. X LOGOSUNU ESKİ KLASİK TWITTER KUŞU LOGOSUYLA DEĞİŞTİRME',
+      heading: '3. X LOGOSUNU ESKİ KLASİK TWITTER KUŞU LOGOSUYLA DEĞİŞTİRME (CSP UYUMLU)',
     },
   ];
 
@@ -398,14 +273,13 @@ export function generateUserscript(config: RepoConfig): string {
   const hasPlusIcon = config.enabledRuleIds.includes('hide-plus-icon');
   const hasEntireTabbar = config.enabledRuleIds.includes('hide-entire-tabbar');
   const hasGrok = config.enabledRuleIds.some((id) => id.startsWith('hide-grok'));
-  const hasMenuClean = config.enabledRuleIds.some((id) => id.startsWith('hide-menu-'));
   const hasLogo = config.enabledRuleIds.some((id) => id.startsWith('restore-'));
 
   return `// ==UserScript==
-// @name         Classic Twitter (No Tabbar & Gray Box, Keep Profile & Bird Logo, No Grok, Clean Menu)
+// @name         Classic Twitter (No Tabbar & Gray Box, Keep Profile & Bird Logo, No Grok)
 // @namespace    https://github.com/${config.githubUsername}/${config.repoName}
-// @version      3.0.0
-// @description  Twitter/X üzerinde "For You", "Takip edilenler", "+ Konular" ve sağdaki "+" gri kutusunu kaldırır, Profil resmini, Twitter kuşu logosunu ve Ayarlar sayfasını korur, Grok ve gereksiz menü öğelerini temizler.
+// @version      3.1.0
+// @description  Twitter/X üzerinde "For You", "Takip edilenler", "+ Konular" ve sağdaki "+" gri kutusunu kaldırır, Profil bağlantısını, menüyü ve Twitter kuşu logosunu korur, Grok'u temizler.
 // @author       ${config.githubUsername}
 // @match        https://x.com/*
 // @match        https://twitter.com/*
@@ -416,6 +290,7 @@ export function generateUserscript(config: RepoConfig): string {
 (function () {
   'use strict';
 
+  const TWITTER_BIRD_PATH = "${CLASSIC_TWITTER_BIRD_PATH}";
   const TWITTER_BIRD_SVG_DATA_URI = "${birdDataUri}";
 
   const style = document.createElement('style');
@@ -423,8 +298,9 @@ export function generateUserscript(config: RepoConfig): string {
   style.textContent = \`
     ${
       hasEntireTabbar
-        ? `/* Yalnızca 2. satırdaki sekme çubuğunu gizle; 1. satırdaki Profil Resmi (UserAvatar / TopNavBar) ve Twitter Logosu korunur */
-    div:has([data-testid="ScrollSnap-List"]):not(:has([data-testid="TopNavBar"])):not(:has([data-testid="DashButton_ProfileIcon_Link"])):not(:has([data-testid^="UserAvatar-Container"])):not(:has(img[src*="profile_images"])):not(:has(svg path[d^="M18.244"])):not(:has(h1)):not(:has(section)):not(:has(article)):not(:has([data-testid="cellInnerDiv"])):not(:has(main)):not([data-testid="primaryColumn"]),
+        ? `/* Yalnızca 2. satırdaki sekme çubuğunu gizle; 1. satırdaki (div:first-child) Profil bağlantısı ve Twitter Logosu korunur */
+    div:first-child + div:has([data-testid="ScrollSnap-List"]):not(:has(article)):not(:has(section)):not(:has([data-testid="cellInnerDiv"])),
+    div:first-child + nav:has([data-testid="ScrollSnap-List"]),
     nav:has([data-testid="ScrollSnap-List"]):not(:has([data-testid="TopNavBar"])):not(:has([data-testid="DashButton_ProfileIcon_Link"])):not(:has([data-testid^="UserAvatar-Container"])),
     div[role="tablist"]:has([data-testid="ScrollSnap-List"]),
     [data-testid="ScrollSnap-SwipeableList"],
@@ -435,13 +311,13 @@ export function generateUserscript(config: RepoConfig): string {
     }
     ${
       hasPlusIcon
-        ? `/* Satırın sağındaki gri kutuyu ve "+" (Artı) butonunu kapsayıcısıyla birlikte gizle */
+        ? `/* Satırın sağındaki gri kutuyu ve "+" (Artı) butonunu gizle (Üst bardaki profil ve logoya dokunmaz) */
     div[role="tablist"]:has([data-testid="ScrollSnap-List"]) ~ *,
     [data-testid="ScrollSnap-SwipeableList"] ~ *,
     [data-testid="ScrollSnap-List"] ~ *,
-    div:has(> a > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has([data-testid^="UserAvatar-Container"])):not(:has(section)):not(:has(article)),
-    div:has(> button > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has([data-testid^="UserAvatar-Container"])):not(:has(section)):not(:has(article)),
-    div:has(> div[role="button"] > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has([data-testid^="UserAvatar-Container"])):not(:has(section)):not(:has(article)),
+    div:has(> a:only-child svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]),
+    div:has(> button:only-child svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]),
+    div:has(> div[role="button"]:only-child svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]),
     a:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"]):not([href="/compose/post"]),
     button:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"]),
     div[role="button"]:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"]) {
@@ -494,70 +370,15 @@ export function generateUserscript(config: RepoConfig): string {
         : ''
     }
     ${
-      hasMenuClean
-        ? `/* Menü / Çekmece Temizliği (Aramalar, Premium, Listeler, Topluluklar, İçerik Üreticisi Stüdyosu, Kurumsal, Reklamlar) */
-    a[href="/i/calls"],
-    a[href*="/calls"],
-    a[data-testid="calls"],
-    a[aria-label="Aramalar"],
-    a[aria-label="Calls"],
-    a[href="/i/premium_sign_up"],
-    a[href*="/i/premium"],
-    a[href="/i/verified-choose"],
-    a[data-testid="premium-signup-tab"],
-    a[data-testid="premium-hub-tab"],
-    a[aria-label="Premium"],
-    a[aria-label="X Premium"],
-    a[href*="/lists"],
-    a[data-testid="AppTabBar_Lists_Link"],
-    a[aria-label="Listeler"],
-    a[aria-label="Lists"],
-    a[href*="/communities"],
-    a[data-testid="communities"],
-    a[data-testid="AppTabBar_Communities_Link"],
-    a[aria-label="Topluluklar"],
-    a[aria-label="Communities"],
-    a[href="/i/jf/creators/studio"],
-    a[href*="/creators"],
-    a[href*="/monetization"],
-    a[data-testid="creatorStudio"],
-    a[data-testid="monetization"],
-    a[href="/i/verified-orgs-signup"],
-    a[href*="/verified-orgs"],
-    a[href*="/i/business"],
-    a[data-testid="vo-signup-tab"],
-    a[aria-label="Kurumsal"],
-    a[aria-label="Verified Orgs"],
-    a[aria-label="Onaylı Kuruluşlar"],
-    a[href*="ads.x.com"],
-    a[href*="ads.twitter.com"],
-    a[href*="/i/ads"],
-    a[data-testid="ads"],
-    a[aria-label="Reklamlar"],
-    a[aria-label="Ads"] {
-      display: none !important;
-    }`
-        : ''
-    }
-    ${
       hasLogo
-        ? `/* X Logosunu Klasik Twitter Kuşu ile değiştir (opacity: 0 ile boyut korunur) */
-    h1[role="heading"] a[href="/home"] svg path,
-    header svg path[d^="M18.244"],
-    #placeholder svg path {
-      opacity: 0 !important;
-    }
-    h1[role="heading"] a[href="/home"] svg,
-    header svg:has(path[d^="M18.244"]),
-    #placeholder svg {
-      background-image: url("\${TWITTER_BIRD_SVG_DATA_URI}") !important;
-      background-repeat: no-repeat !important;
-      background-position: center !important;
-      background-size: contain !important;
-      width: 28px !important;
-      height: 28px !important;
-      min-width: 28px !important;
-      min-height: 28px !important;
+        ? `/* X Logosunu Klasik Twitter Kuşu ile değiştir (CSP-uyumlu d: path() ile logo asla kaybolmaz) */
+    svg path[d^="M18.244"] {
+      d: path("\${TWITTER_BIRD_PATH}") !important;
+      fill: ${config.logoColor} !important;
+      color: ${config.logoColor} !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      display: inline !important;
     }`
         : ''
     }
@@ -595,9 +416,9 @@ export function generateExtensionManifest(): string {
     {
       manifest_version: 3,
       name: 'Classic Twitter — Keep Profile & Bird Logo, No Tabbar, No Grok',
-      version: '3.0.0',
+      version: '3.1.0',
       description:
-        'Twitter/X üzerinde Sana Özel, Takip edilenler, + Konular, + gri kutusu, Grok ve gereksiz menü öğelerini kaldırır; Profil resmini, Ayarlar sayfasını ve mavi Twitter kuşu logosunu korur.',
+        'Twitter/X üzerinde Sana Özel, Takip edilenler, + Konular, + gri kutusu ve Grok öğelerini kaldırır; Profil bağlantısını, menüyü ve mavi Twitter kuşu logosunu korur.',
       content_scripts: [
         {
           matches: ['https://x.com/*', 'https://twitter.com/*'],
@@ -619,22 +440,20 @@ export function generateReadme(config: RepoConfig): string {
 
   return `# Classic Twitter for Brave Shields 🐦
 
-Twitter/X arayüzündeki **"For You" (Sana Özel)**, **"Following" (Takip edilenler)**, **"+ Konular" (+ Topics)** ve satırın en sağındaki **"+" (Artı) gri kutu alanını** tamamen kaldıran, **1. satırdaki Profil Resmini ve Klasik Mavi Twitter Kuşu (\`#1DA1F2\`) Logosunu** koruyan, **Ayarlar (\`/settings\`)** sayfasını bozmayan, **Grok (Grox)** ve menüdeki gereksiz öğeleri temizleyen **Brave Shields İçerik Filtreleme** listesi.
+Twitter/X arayüzündeki **"For You" (Sana Özel)**, **"Following" (Takip edilenler)**, **"+ Konular" (+ Topics)** ve satırın en sağındaki **"+" (Artı) gri kutu alanını** tamamen kaldıran, **1. satırdaki Profil Bağlantısını/Resmini, sol/mobil menüyü ve Klasik Mavi Twitter Kuşu (\`#1DA1F2\`) Logosunu** koruyan, **Grok (Grox)** öğelerini temizleyen **Brave Shields İçerik Filtreleme** listesi.
 
 ---
 
 ## ✨ Özellikler
 
-1. **Profil Resmi ve Twitter Logosu Korunarak Üst Sekme Satırı Temizliği:**
-   - Mobil ve masaüstünde 1. satırdaki **Profil Resmi (Avatar)** ve ortadaki **Mavi Twitter Kuşu Logosu** korunur (böylece profil çekmecesini ve Ayarlar menüsünü her zaman açabilirsiniz).
+1. **Profil Bağlantısı, Menü ve Twitter Logosu Korunarak Üst Sekme Satırı Temizliği:**
+   - Mobil ve masaüstünde 1. satırdaki **Profil Bağlantısı / Resmi (Avatar)** ve ortadaki **Mavi Twitter Kuşu Logosu** tüm sayfalarda (Ana Sayfa, Geçmiş, Ayarlar vb.) korunur.
+   - Sol menü / mobil profil çekmecesi (**Profil, Aramalar, Premium, Listeler, Topluluklar, Geçmiş, İçerik Üreticisi Stüdyosu, Kurumsal, Reklamlar, Ayarlar ve gizlilik, Çıkış yap**) olduğu gibi korunur.
    - Yalnızca 2. satırdaki \`For You (Sana özel)\`, \`Following (Takip edilenler)\`, \`+ Konular\` sekmeleri ve sağdaki gri \`+\` kutusu tamamen kaldırılır.
 2. **Grok (Grox) Tam Temizliği:**
-   - Sol menüdeki (\`nav\`) Grok sekmesini, sağ alt köşedeki açılır Grok çekmecesini (\`GrokDrawer\`), gönderi üstü Grok özet butonlarını ve sağ sütun tanıtım kartlarını gizler.
-3. **Sol Menü ve Mobil Profil Çekmecesi Temizliği:**
-   - Menüdeki **Aramalar (Calls)**, **Premium**, **Listeler (Lists)**, **Topluluklar (Communities)**, **İçerik Üreticisi Stüdyosu (Creator Studio)**, **Kurumsal (Verified Orgs)** ve **Reklamlar (Ads)** satırlarını gizler.
-   - **Profil**, **Geçmiş / Yer İşaretleri**, **Ayarlar ve gizlilik** ve **Çıkış yap** öğeleri korunur.
-4. **Eski Klasik Twitter Kuşu Logosu (\`#1DA1F2\`):**
-   - Brave Shields \`:style()\` kozmetik kuralı ile sol üst köşedeki, mobil üst çubuktaki (\`TopNavBar\`) ve açılış ekranındaki (\`#placeholder\`) X logosunu orijinal mavi Twitter kuşu vektörüyle değiştirir.
+   - Navigasyon çubuğundaki Grok sekmesini, sağ alt köşedeki açılır Grok çekmecesini (\`GrokDrawer\`), gönderi üstü Grok özet butonlarını ve sağ sütun tanıtım kartlarını gizler.
+3. **Eski Klasik Twitter Kuşu Logosu (\`#1DA1F2\` - CSP Uyumlu):**
+   - Brave Shields \`:style()\` kozmetik kuralı ile \`svg path[d^="M18.244"]\` öğesini gizlemeden (\`opacity: 1\`) doğrudan \`d: path(...)\` ile orijinal mavi Twitter kuşu vektörüne dönüştürür.
 
 ---
 

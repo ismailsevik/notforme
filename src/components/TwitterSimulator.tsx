@@ -36,6 +36,7 @@ const X_LOGO_PATH =
 export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) => {
   const [shieldsActive, setShieldsActive] = useState<boolean>(true);
   const [showXray, setShowXray] = useState<boolean>(false);
+  const [activePage, setActivePage] = useState<'home' | 'history' | 'profile'>('home');
 
   const isRuleActive = (id: string) =>
     shieldsActive && config.enabledRuleIds.includes(id);
@@ -54,10 +55,6 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
   const hideGrokTweetActions = isRuleActive('hide-grok-tweet-actions');
   const hideGrokPromos = isRuleActive('hide-grok-promos');
 
-  const hideMenuCallsPremium = isRuleActive('hide-menu-calls-premium');
-  const hideMenuListsCommunities = isRuleActive('hide-menu-lists-communities');
-  const hideMenuCreatorOrgsAds = isRuleActive('hide-menu-creator-orgs-ads');
-
   const restoreHeaderBirdLogo = isRuleActive('restore-header-bird-logo');
   const restoreBirdPostButton = isRuleActive('restore-bird-post-button');
 
@@ -71,9 +68,6 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
     hideGrokDrawer,
     hideGrokTweetActions,
     hideGrokPromos,
-    hideMenuCallsPremium,
-    hideMenuListsCommunities,
-    hideMenuCreatorOrgsAds,
     restoreHeaderBirdLogo,
     restoreBirdPostButton,
   ].filter(Boolean).length;
@@ -104,12 +98,28 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
               </svg>
             )}
             <span className="truncate">
-              {restoreHeaderBirdLogo ? 'Ana Sayfa / Twitter' : 'Ana Sayfa / X'}
+              {activePage === 'history'
+                ? restoreHeaderBirdLogo
+                  ? 'Geçmiş / Twitter'
+                  : 'Geçmiş / X'
+                : activePage === 'profile'
+                  ? restoreHeaderBirdLogo
+                    ? 'Profil / Twitter'
+                    : 'Profil / X'
+                  : restoreHeaderBirdLogo
+                    ? 'Ana Sayfa / Twitter'
+                    : 'Ana Sayfa / X'}
             </span>
           </div>
 
           <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-mono">
-            <span>https://x.com/home</span>
+            <span>
+              {activePage === 'history'
+                ? 'https://x.com/i/bookmarks'
+                : activePage === 'profile'
+                  ? 'https://x.com/profil'
+                  : 'https://x.com/home'}
+            </span>
             <span aria-hidden="true">·</span>
             <span className="tabular-nums">{blockedElementsCount} modül aktif</span>
           </div>
@@ -159,16 +169,18 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
 
       {/* Simulated X.com DOM Canvas */}
       <div className="bg-black text-white grid grid-cols-12 min-h-[530px] relative select-none">
-        {/* Left Navigation / Mobile Drawer Menu */}
+        {/* Left Navigation / Mobile Drawer Menu (KEPT COMPLETELY INTACT) */}
         <div className="col-span-4 sm:col-span-4 lg:col-span-3 border-r border-neutral-800 p-3 flex flex-col justify-between">
           <div className="space-y-0.5">
-            {/* Top-Left Brand Logo (h1[role="heading"] a[href="/home"] svg) */}
-            <div className="pb-1.5">
-              <div
-                className={`inline-flex items-center gap-2 p-1.5 rounded-full hover:bg-neutral-900 transition-colors relative ${
+            {/* Top-Left Brand Logo & Profile Link in Drawer */}
+            <div className="pb-1.5 flex items-center justify-between">
+              <button
+                type="button"
+                onClick={() => setActivePage('home')}
+                className={`inline-flex items-center gap-2 p-1.5 rounded-full hover:bg-neutral-900 transition-colors cursor-pointer ${
                   showXray ? 'ring-1 ring-[#1DA1F2]' : ''
                 }`}
-                title='h1[role="heading"] a[href="/home"] svg'
+                title='svg path[d^="M18.244"]:style(d: path(...))'
               >
                 {restoreHeaderBirdLogo ? (
                   <svg
@@ -190,25 +202,41 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
                 )}
                 {showXray && (
                   <span className="text-[10px] font-mono text-[#1DA1F2] bg-neutral-950/90 px-1.5 py-0.5 rounded border border-[#1DA1F2]/40">
-                    :style(bird)
+                    d: path(bird)
                   </span>
                 )}
-              </div>
+              </button>
             </div>
 
-            {/* KEPT: Ana Sayfa */}
-            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs font-bold text-white bg-neutral-900/60">
+            {/* Ana Sayfa */}
+            <button
+              type="button"
+              onClick={() => setActivePage('home')}
+              className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs transition-colors cursor-pointer ${
+                activePage === 'home'
+                  ? 'font-bold text-white bg-neutral-900/80'
+                  : 'font-medium text-neutral-300 hover:bg-neutral-900/40'
+              }`}
+            >
               <Home className="w-4 h-4 shrink-0" />
               <span className="truncate">Ana Sayfa</span>
-            </div>
+            </button>
 
-            {/* KEPT: Profil */}
-            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs font-semibold text-neutral-200 hover:bg-neutral-900/40">
+            {/* Profil (KEPT) */}
+            <button
+              type="button"
+              onClick={() => setActivePage('profile')}
+              className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs transition-colors cursor-pointer ${
+                activePage === 'profile'
+                  ? 'font-bold text-white bg-neutral-900/80'
+                  : 'font-medium text-neutral-200 hover:bg-neutral-900/40'
+              }`}
+            >
               <User className="w-4 h-4 shrink-0" />
               <span className="truncate">Profil</span>
-            </div>
+            </button>
 
-            {/* REMOVED: Grok */}
+            {/* Grok (REMOVED BY GROK FILTER) */}
             {(!hideGrokSidebar || showXray) && (
               <div
                 className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs transition-opacity ${
@@ -222,118 +250,70 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
               </div>
             )}
 
-            {/* REMOVED: Aramalar */}
-            {(!hideMenuCallsPremium || showXray) && (
-              <div
-                className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs transition-opacity ${
-                  hideMenuCallsPremium && showXray
-                    ? 'opacity-35 ring-1 ring-rose-500/60 bg-rose-950/20 line-through text-rose-300'
-                    : 'text-neutral-300 hover:bg-neutral-900/40'
-                }`}
-              >
-                <Phone className="w-4 h-4 shrink-0" />
-                <span className="truncate">Aramalar</span>
-              </div>
-            )}
-
-            {/* REMOVED: Premium */}
-            {(!hideMenuCallsPremium || showXray) && (
-              <div
-                className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs transition-opacity ${
-                  hideMenuCallsPremium && showXray
-                    ? 'opacity-35 ring-1 ring-rose-500/60 bg-rose-950/20 line-through text-rose-300'
-                    : 'text-neutral-300 hover:bg-neutral-900/40'
-                }`}
-              >
-                <BadgeCheck className="w-4 h-4 shrink-0" />
-                <span className="truncate">Premium</span>
-              </div>
-            )}
-
-            {/* REMOVED: Listeler */}
-            {(!hideMenuListsCommunities || showXray) && (
-              <div
-                className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs transition-opacity ${
-                  hideMenuListsCommunities && showXray
-                    ? 'opacity-35 ring-1 ring-rose-500/60 bg-rose-950/20 line-through text-rose-300'
-                    : 'text-neutral-300 hover:bg-neutral-900/40'
-                }`}
-              >
-                <List className="w-4 h-4 shrink-0" />
-                <span className="truncate">Listeler</span>
-              </div>
-            )}
-
-            {/* REMOVED: Topluluklar */}
-            {(!hideMenuListsCommunities || showXray) && (
-              <div
-                className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs transition-opacity ${
-                  hideMenuListsCommunities && showXray
-                    ? 'opacity-35 ring-1 ring-rose-500/60 bg-rose-950/20 line-through text-rose-300'
-                    : 'text-neutral-300 hover:bg-neutral-900/40'
-                }`}
-              >
-                <Users className="w-4 h-4 shrink-0" />
-                <span className="truncate">Topluluklar</span>
-              </div>
-            )}
-
-            {/* KEPT: Geçmiş / Yer İşaretleri */}
-            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs font-semibold text-neutral-200 hover:bg-neutral-900/40">
-              <Bookmark className="w-4 h-4 shrink-0" />
-              <span className="truncate">Geçmiş</span>
+            {/* Aramalar (KEPT AS REQUESTED) */}
+            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs font-medium text-neutral-200 hover:bg-neutral-900/40">
+              <Phone className="w-4 h-4 shrink-0" />
+              <span className="truncate">Aramalar</span>
             </div>
 
-            {/* REMOVED: İçerik Üreticisi Stüdyosu */}
-            {(!hideMenuCreatorOrgsAds || showXray) && (
-              <div
-                className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs transition-opacity ${
-                  hideMenuCreatorOrgsAds && showXray
-                    ? 'opacity-35 ring-1 ring-rose-500/60 bg-rose-950/20 line-through text-rose-300'
-                    : 'text-neutral-300 hover:bg-neutral-900/40'
-                }`}
-              >
-                <Rocket className="w-4 h-4 shrink-0" />
-                <span className="truncate">İçerik Üreticisi Stüd...</span>
-              </div>
-            )}
+            {/* Premium (KEPT AS REQUESTED) */}
+            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs font-medium text-neutral-200 hover:bg-neutral-900/40">
+              <BadgeCheck className="w-4 h-4 shrink-0" />
+              <span className="truncate">Premium</span>
+            </div>
 
-            {/* REMOVED: Kurumsal */}
-            {(!hideMenuCreatorOrgsAds || showXray) && (
-              <div
-                className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs transition-opacity ${
-                  hideMenuCreatorOrgsAds && showXray
-                    ? 'opacity-35 ring-1 ring-rose-500/60 bg-rose-950/20 line-through text-rose-300'
-                    : 'text-neutral-300 hover:bg-neutral-900/40'
-                }`}
-              >
-                <Zap className="w-4 h-4 shrink-0" />
-                <span className="truncate">Kurumsal</span>
-              </div>
-            )}
+            {/* Listeler (KEPT AS REQUESTED) */}
+            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs font-medium text-neutral-200 hover:bg-neutral-900/40">
+              <List className="w-4 h-4 shrink-0" />
+              <span className="truncate">Listeler</span>
+            </div>
 
-            {/* REMOVED: Reklamlar */}
-            {(!hideMenuCreatorOrgsAds || showXray) && (
-              <div
-                className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs transition-opacity ${
-                  hideMenuCreatorOrgsAds && showXray
-                    ? 'opacity-35 ring-1 ring-rose-500/60 bg-rose-950/20 line-through text-rose-300'
-                    : 'text-neutral-300 hover:bg-neutral-900/40'
-                }`}
-              >
-                <ExternalLink className="w-4 h-4 shrink-0" />
-                <span className="truncate">Reklamlar</span>
-              </div>
-            )}
+            {/* Topluluklar (KEPT AS REQUESTED) */}
+            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs font-medium text-neutral-200 hover:bg-neutral-900/40">
+              <Users className="w-4 h-4 shrink-0" />
+              <span className="truncate">Topluluklar</span>
+            </div>
 
-            {/* KEPT: Ayarlar ve gizlilik */}
-            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs font-semibold text-neutral-200 hover:bg-neutral-900/40">
+            {/* Geçmiş (KEPT & INTERACTIVE) */}
+            <button
+              type="button"
+              onClick={() => setActivePage('history')}
+              className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs transition-colors cursor-pointer ${
+                activePage === 'history'
+                  ? 'font-bold text-white bg-neutral-900/80 ring-1 ring-[#1DA1F2]/50'
+                  : 'font-medium text-neutral-200 hover:bg-neutral-900/40'
+              }`}
+            >
+              <Bookmark className="w-4 h-4 shrink-0" />
+              <span className="truncate">Geçmiş</span>
+            </button>
+
+            {/* İçerik Üreticisi Stüdyosu (KEPT AS REQUESTED) */}
+            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs font-medium text-neutral-200 hover:bg-neutral-900/40">
+              <Rocket className="w-4 h-4 shrink-0" />
+              <span className="truncate">İçerik Üreticisi Stüd...</span>
+            </div>
+
+            {/* Kurumsal (KEPT AS REQUESTED) */}
+            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs font-medium text-neutral-200 hover:bg-neutral-900/40">
+              <Zap className="w-4 h-4 shrink-0" />
+              <span className="truncate">Kurumsal</span>
+            </div>
+
+            {/* Reklamlar (KEPT AS REQUESTED) */}
+            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs font-medium text-neutral-200 hover:bg-neutral-900/40">
+              <ExternalLink className="w-4 h-4 shrink-0" />
+              <span className="truncate">Reklamlar</span>
+            </div>
+
+            {/* Ayarlar ve gizlilik (KEPT) */}
+            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs font-medium text-neutral-200 hover:bg-neutral-900/40">
               <Settings className="w-4 h-4 shrink-0" />
               <span className="truncate">Ayarlar ve gizlilik</span>
             </div>
 
-            {/* KEPT: Çıkış yap */}
-            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs font-semibold text-neutral-200 hover:bg-neutral-900/40">
+            {/* Çıkış yap (KEPT) */}
+            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-full text-xs font-medium text-neutral-200 hover:bg-neutral-900/40">
               <LogOut className="w-4 h-4 shrink-0" />
               <span className="truncate">Çıkış yap</span>
             </div>
@@ -355,30 +335,40 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
 
         {/* Center Primary Feed Column ([data-testid="primaryColumn"]) */}
         <div className="col-span-8 sm:col-span-5 lg:col-span-6 border-r border-neutral-800 flex flex-col">
-          {/* KEPT: 1st Row Mobile Top Bar ([data-testid="TopNavBar"]: Profile Avatar + Center Bird Logo) */}
+          {/* KEPT ON ALL PAGES (Ana Sayfa, Geçmiş, Profil): 1st Row Top Bar (div:first-child) */}
           <div
             className={`px-4 py-2.5 border-b border-neutral-800/80 bg-black/90 flex items-center justify-between ${
               showXray ? 'ring-1 ring-emerald-500/50' : ''
             }`}
-            title='[data-testid="TopNavBar"] (Korundu: Profil Resmi + Kuş Logosu)'
+            title='div:first-child (Her sayfada korunur: Profil Bağlantısı + Twitter Kuşu Logosu)'
           >
-            {/* Left: User Profile Avatar (Opens Drawer for Settings) */}
-            <div className="flex items-center gap-2">
-              <div
-                className="w-7 h-7 rounded-full bg-[#1DA1F2]/25 border border-[#1DA1F2] flex items-center justify-center text-[11px] font-bold text-[#1DA1F2]"
-                title='[data-testid="DashButton_ProfileIcon_Link"] / UserAvatar (Korundu)'
-              >
+            {/* Left: User Profile Link / Avatar */}
+            <button
+              type="button"
+              onClick={() => setActivePage('profile')}
+              className="flex items-center gap-2 text-left hover:opacity-90 transition-opacity cursor-pointer"
+              title='Profil Bağlantısı (Ana Sayfa ve Geçmiş dahil tüm sayfalarda görünür)'
+            >
+              <div className="w-7 h-7 rounded-full bg-[#1DA1F2]/25 border border-[#1DA1F2] flex items-center justify-center text-[11px] font-bold text-[#1DA1F2] shrink-0">
                 PR
               </div>
+              <span className="text-xs font-semibold text-neutral-200">
+                Profil
+              </span>
               {showXray && (
                 <span className="text-[10px] font-mono text-emerald-400">
-                  Profil (Korundu)
+                  Korundu
                 </span>
               )}
-            </div>
+            </button>
 
             {/* Center: Classic Twitter Bird Logo */}
-            <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setActivePage('home')}
+              className="flex items-center gap-1.5 cursor-pointer"
+              title='svg path[d^="M18.244"] (CSP-uyumlu d: path ile her sayfada görünür)'
+            >
               {restoreHeaderBirdLogo ? (
                 <svg
                   viewBox="0 0 24 24"
@@ -399,16 +389,22 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
               )}
               {showXray && (
                 <span className="text-[10px] font-mono text-[#1DA1F2]">
-                  28x28px Bird
+                  opacity: 1
                 </span>
               )}
-            </div>
+            </button>
 
-            {/* Right spacer to keep Bird centered */}
-            <div className="w-7" />
+            {/* Right: Current Page Indicator */}
+            <div className="text-[11px] font-mono text-neutral-400">
+              {activePage === 'history'
+                ? 'Geçmiş'
+                : activePage === 'profile'
+                  ? 'Profil'
+                  : 'Ana Sayfa'}
+            </div>
           </div>
 
-          {/* 2nd Row: Top Timeline Tabbar ([data-testid="ScrollSnap-List"] + right "+" icon) */}
+          {/* 2nd Row: Top Timeline Tabbar (div:first-child + div:has([data-testid="ScrollSnap-List"])) */}
           {(!isTabbarCompletelyHidden || showXray) && (
             <div
               className={`border-b border-neutral-800 bg-black/85 backdrop-blur-xs flex items-center ${
@@ -416,7 +412,7 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
                   ? 'opacity-35 ring-1 ring-rose-500/60 bg-rose-950/20'
                   : ''
               }`}
-              title='div:has([data-testid="ScrollSnap-List"]):not(:has([data-testid="TopNavBar"]))'
+              title='div:first-child + div:has([data-testid="ScrollSnap-List"])'
             >
               {/* First Child: "For You / Sana Özel" Tab */}
               {(!hideForYouTab || showXray) && (
@@ -460,7 +456,7 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
                 </div>
               )}
 
-              {/* Far Right "+" Icon Button */}
+              {/* Far Right "+" Icon Button (:only-child wrapper) */}
               {(!hidePlusIcon || showXray) && (
                 <div
                   className={`px-3 py-3 flex flex-col items-center justify-center shrink-0 transition-opacity ${
@@ -468,7 +464,7 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
                       ? 'opacity-40 bg-rose-950/30 text-rose-300 ring-1 ring-rose-500/50'
                       : 'text-neutral-400 hover:text-white'
                   }`}
-                  title='svg:has(path[d^="M11 11V4"])'
+                  title='div:has(> a:only-child svg path[d^="M11 11V4"])'
                 >
                   <Plus className="w-4 h-4" />
                 </div>
@@ -476,114 +472,148 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
             </div>
           )}
 
-          {/* Simulated Posts / Tweets */}
+          {/* Simulated Posts / Content for Ana Sayfa, Geçmiş, or Profil */}
           <div className="divide-y divide-neutral-800 flex-1">
-            {/* Tweet 1 */}
-            <article className="p-4 hover:bg-neutral-950/60 transition-colors">
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-full bg-[#1DA1F2]/20 border border-[#1DA1F2]/40 flex items-center justify-center text-[#1DA1F2] font-bold text-sm shrink-0">
-                  BT
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-1.5 text-sm truncate">
-                      <span className="font-bold text-white">Açık Kaynak Web</span>
-                      <CheckCircle2 className="w-4 h-4 text-[#1DA1F2] shrink-0" />
-                      <span className="text-neutral-500 text-xs">@acikkaynak · 14d</span>
+            {activePage === 'history' ? (
+              <>
+                <div className="px-4 py-3 bg-neutral-950/80 border-b border-neutral-800 flex items-center justify-between">
+                  <div>
+                    <div className="text-sm font-bold text-white">Geçmiş ve Yer İşaretleri</div>
+                    <div className="text-xs text-neutral-400">
+                      Üst bardaki Profil bağlantısı ve Klasik Twitter Kuşu logosu bu sayfada da kesintisiz görünür.
                     </div>
-
-                    {/* Tweet-level Grok Button (button[aria-label*="Grok"]) */}
-                    <div className="flex items-center gap-2 shrink-0">
-                      {(!hideGrokTweetActions || showXray) && (
-                        <div
-                          className={`flex items-center gap-1 px-2 py-0.5 rounded border text-[11px] ${
-                            hideGrokTweetActions && showXray
-                              ? 'opacity-35 border-rose-500/60 text-rose-300 line-through'
-                              : 'border-neutral-700 text-neutral-400 bg-neutral-900'
-                          }`}
-                          title='button[aria-label*="Grok"]'
-                        >
-                          <Sparkles className="w-3 h-3" />
-                          <span>Grok</span>
+                  </div>
+                </div>
+                <article className="p-4 hover:bg-neutral-950/60 transition-colors">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[#1DA1F2]/20 border border-[#1DA1F2]/40 flex items-center justify-center text-[#1DA1F2] font-bold text-sm shrink-0">
+                      TW
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-1.5 text-sm truncate">
+                          <span className="font-bold text-white">Klasik Twitter Rehberi</span>
+                          <CheckCircle2 className="w-4 h-4 text-[#1DA1F2] shrink-0" />
+                          <span className="text-neutral-500 text-xs">@birdshield · Geçmiş</span>
                         </div>
-                      )}
-                      <MoreHorizontal className="w-4 h-4 text-neutral-500" />
+                      </div>
+                      <p className="mt-1.5 text-sm text-neutral-200 leading-relaxed">
+                        Geçmiş sayfasında üst bar (<code className="text-[#1DA1F2]">div:first-child</code>) korunduğu için sol üstteki <strong>Profil bağlantısı</strong> ve ortadaki <strong>Twitter kuşu logosu</strong> her zaman görünür kalır.
+                      </p>
                     </div>
                   </div>
-
-                  <p className="mt-1.5 text-sm text-neutral-200 leading-relaxed">
-                    Menüdeki <strong>Aramalar, Premium, Listeler, Topluluklar, İçerik Üreticisi Stüdyosu, Kurumsal</strong> ve <strong>Reklamlar</strong> öğeleri de kaldırıldı. Yalnızca <strong>Profil, Geçmiş, Ayarlar ve gizlilik</strong> ve <strong>Çıkış yap</strong> korundu.
-                  </p>
-
-                  <div className="mt-3 flex items-center justify-between max-w-xs text-neutral-500 text-xs font-mono tabular-nums">
-                    <span className="flex items-center gap-1.5">
-                      <MessageCircle className="w-4 h-4" /> 18
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <Repeat2 className="w-4 h-4" /> 64
-                    </span>
-                    <span className="flex items-center gap-1.5 text-rose-500">
-                      <Heart className="w-4 h-4 fill-current" /> 412
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <Share className="w-4 h-4" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            {/* Tweet 2 */}
-            <article className="p-4 hover:bg-neutral-950/60 transition-colors">
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold text-sm shrink-0">
-                  DEV
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-1.5 text-sm truncate">
-                      <span className="font-bold text-white">Kronolojik Akış</span>
-                      <span className="text-neutral-500 text-xs">@kronolojik · 42d</span>
+                </article>
+              </>
+            ) : (
+              <>
+                {/* Tweet 1 */}
+                <article className="p-4 hover:bg-neutral-950/60 transition-colors">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[#1DA1F2]/20 border border-[#1DA1F2]/40 flex items-center justify-center text-[#1DA1F2] font-bold text-sm shrink-0">
+                      BT
                     </div>
-
-                    <div className="flex items-center gap-2 shrink-0">
-                      {(!hideGrokTweetActions || showXray) && (
-                        <div
-                          className={`flex items-center gap-1 px-2 py-0.5 rounded border text-[11px] ${
-                            hideGrokTweetActions && showXray
-                              ? 'opacity-35 border-rose-500/60 text-rose-300 line-through'
-                              : 'border-neutral-700 text-neutral-400 bg-neutral-900'
-                          }`}
-                        >
-                          <Sparkles className="w-3 h-3" />
-                          <span>Grok</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-1.5 text-sm truncate">
+                          <span className="font-bold text-white">Açık Kaynak Web</span>
+                          <CheckCircle2 className="w-4 h-4 text-[#1DA1F2] shrink-0" />
+                          <span className="text-neutral-500 text-xs">@acikkaynak · 14d</span>
                         </div>
-                      )}
-                      <MoreHorizontal className="w-4 h-4 text-neutral-500" />
+
+                        {/* Tweet-level Grok Button (button[aria-label*="Grok"]) */}
+                        <div className="flex items-center gap-2 shrink-0">
+                          {(!hideGrokTweetActions || showXray) && (
+                            <div
+                              className={`flex items-center gap-1 px-2 py-0.5 rounded border text-[11px] ${
+                                hideGrokTweetActions && showXray
+                                  ? 'opacity-35 border-rose-500/60 text-rose-300 line-through'
+                                  : 'border-neutral-700 text-neutral-400 bg-neutral-900'
+                              }`}
+                              title='button[aria-label*="Grok"]'
+                            >
+                              <Sparkles className="w-3 h-3" />
+                              <span>Grok</span>
+                            </div>
+                          )}
+                          <MoreHorizontal className="w-4 h-4 text-neutral-500" />
+                        </div>
+                      </div>
+
+                      <p className="mt-1.5 text-sm text-neutral-200 leading-relaxed">
+                        Sol menü / mobil çekmece (<strong>Profil, Aramalar, Premium, Listeler, Topluluklar, Geçmiş, İçerik Üreticisi Stüdyosu, Kurumsal, Reklamlar, Ayarlar ve gizlilik, Çıkış yap</strong>) olduğu gibi korundu; üst bardaki <strong>Profil bağlantısı ve Twitter kuşu logosu</strong> her sayfada görünür.
+                      </p>
+
+                      <div className="mt-3 flex items-center justify-between max-w-xs text-neutral-500 text-xs font-mono tabular-nums">
+                        <span className="flex items-center gap-1.5">
+                          <MessageCircle className="w-4 h-4" /> 18
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <Repeat2 className="w-4 h-4" /> 64
+                        </span>
+                        <span className="flex items-center gap-1.5 text-rose-500">
+                          <Heart className="w-4 h-4 fill-current" /> 412
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <Share className="w-4 h-4" />
+                        </span>
+                      </div>
                     </div>
                   </div>
+                </article>
 
-                  <p className="mt-1.5 text-sm text-neutral-200 leading-relaxed">
-                    GitHub üzerinde barındırılan <code className="text-[#1DA1F2]">filters.txt</code> dosyasını <code className="text-neutral-300">brave://settings/shields/filters</code> adresine eklediğinizde hem masaüstü hem mobil Brave üzerinde otomatik güncellenir.
-                  </p>
+                {/* Tweet 2 */}
+                <article className="p-4 hover:bg-neutral-950/60 transition-colors">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold text-sm shrink-0">
+                      DEV
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-1.5 text-sm truncate">
+                          <span className="font-bold text-white">Kronolojik Akış</span>
+                          <span className="text-neutral-500 text-xs">@kronolojik · 42d</span>
+                        </div>
 
-                  <div className="mt-3 flex items-center justify-between max-w-xs text-neutral-500 text-xs font-mono tabular-nums">
-                    <span className="flex items-center gap-1.5">
-                      <MessageCircle className="w-4 h-4" /> 9
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <Repeat2 className="w-4 h-4" /> 31
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <Heart className="w-4 h-4" /> 195
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <Share className="w-4 h-4" />
-                    </span>
+                        <div className="flex items-center gap-2 shrink-0">
+                          {(!hideGrokTweetActions || showXray) && (
+                            <div
+                              className={`flex items-center gap-1 px-2 py-0.5 rounded border text-[11px] ${
+                                hideGrokTweetActions && showXray
+                                  ? 'opacity-35 border-rose-500/60 text-rose-300 line-through'
+                                  : 'border-neutral-700 text-neutral-400 bg-neutral-900'
+                              }`}
+                            >
+                              <Sparkles className="w-3 h-3" />
+                              <span>Grok</span>
+                            </div>
+                          )}
+                          <MoreHorizontal className="w-4 h-4 text-neutral-500" />
+                        </div>
+                      </div>
+
+                      <p className="mt-1.5 text-sm text-neutral-200 leading-relaxed">
+                        Logo kuralı <code className="text-[#1DA1F2]">opacity: 0</code> ve <code className="text-neutral-300">url()</code> yerine doğrudan CSP-uyumlu <code className="text-[#1DA1F2]">d: path(...)</code> kullandığı için Twitter kuşu logosu hiçbir sayfada kaybolmaz.
+                      </p>
+
+                      <div className="mt-3 flex items-center justify-between max-w-xs text-neutral-500 text-xs font-mono tabular-nums">
+                        <span className="flex items-center gap-1.5">
+                          <MessageCircle className="w-4 h-4" /> 9
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <Repeat2 className="w-4 h-4" /> 31
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <Heart className="w-4 h-4" /> 195
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <Share className="w-4 h-4" />
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </article>
+                </article>
+              </>
+            )}
           </div>
         </div>
 
