@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Classic Twitter (No Tabbar, No Grok, Clean Menu & Old Bird Logo)
+// @name         Classic Twitter (No Tabbar & Gray Box, No Grok, Clean Menu & Old Bird Logo)
 // @namespace    https://github.com/classic-twitter/brave-shields-filter
-// @version      2.8.0
-// @description  Twitter/X üzerinde "Sana Özel / Takip edilenler / + Konular / +" satırını kaldırır, Grok'u temizler, menüdeki Aramalar, Premium, Listeler, Topluluklar, İçerik Üreticisi Stüdyosu, Kurumsal ve Reklamlar öğelerini gizler, logoyu ve sekme ikonunu klasik mavi Twitter kuşu yapar.
+// @version      2.9.0
+// @description  Twitter/X üzerinde "Sana Özel / Takip edilenler / + Konular" satırını ve sağdaki "+" gri kutusunu kaldırır, Ayarlar sayfasını korur, Grok'u ve gereksiz menü öğelerini temizler, logoyu ve sekme ikonunu klasik mavi Twitter kuşu yapar.
 // @author       BirdShield
 // @match        https://x.com/*
 // @match        https://twitter.com/*
@@ -19,25 +19,26 @@
   const style = document.createElement('style');
   style.id = 'birdshield-classic-twitter-style';
   style.textContent = `
-    /* 1. Üst sekme çubuğu (Sana Özel, Takip edilenler, + Konular ve sağdaki + ikonu) */
-    div[role="navigation"]:has([data-testid="ScrollSnap-List"]),
-    nav[role="navigation"]:has([data-testid="ScrollSnap-List"]),
-    div:has(> [data-testid="ScrollSnap-List"]),
-    div:has(> div[role="tablist"]):not([data-testid="primaryColumn"]),
+    /* 1. Üst sekme çubuğu (Sana Özel, Takip edilenler, + Konular ve sağdaki + gri kutusu) - Ayarlar (/settings) korunur */
+    div:has([data-testid="ScrollSnap-List"]):not(:has(section)):not(:has(article)):not(:has([data-testid="cellInnerDiv"])):not(:has(main)):not([data-testid="primaryColumn"]),
+    nav:has([data-testid="ScrollSnap-List"]):not(:has(section)):not(:has(article)),
+    div[role="tablist"]:has([data-testid="ScrollSnap-List"]),
+    div[role="tablist"]:has([data-testid="ScrollSnap-List"]) ~ *,
+    [data-testid="ScrollSnap-SwipeableList"],
+    [data-testid="ScrollSnap-SwipeableList"] ~ *,
     [data-testid="ScrollSnap-List"],
     [data-testid="ScrollSnap-List"] ~ *,
-    div[role="tablist"] ~ *,
     [data-testid="ScrollSnap-List"] > div[role="presentation"],
     [data-testid="ScrollSnap-List"] a[href*="/topics"],
     [data-testid="ScrollSnap-List"] a[href*="/lists"],
     [data-testid="ScrollSnap-nextButtonWrapper"],
     [data-testid="ScrollSnap-prevButtonWrapper"],
-    header a:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]),
-    header button:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]),
-    [data-testid="primaryColumn"] a:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]),
-    [data-testid="primaryColumn"] button:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]),
-    svg:has(path[d="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7z"]),
-    div[role="tablist"]:has(a[href="/home"]) {
+    div:has(> a > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has(section)):not(:has(article)),
+    div:has(> button > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has(section)):not(:has(article)),
+    div:has(> div[role="button"] > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has(section)):not(:has(article)),
+    a:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"]):not([href="/compose/post"]),
+    button:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"]),
+    div[role="button"]:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"]) {
       display: none !important;
     }
 
@@ -114,35 +115,6 @@
   `;
   document.documentElement.appendChild(style);
 
-  const BANNED_MENU_LABELS = [
-    /^Aramalar$/i,
-    /^Calls$/i,
-    /^Premium$/i,
-    /^Listeler$/i,
-    /^Lists$/i,
-    /^Topluluklar$/i,
-    /^Communities$/i,
-    /^İçerik Üreticisi Stü/i,
-    /^Creator Studio/i,
-    /^Para kazanma/i,
-    /^Monetization/i,
-    /^Kurumsal$/i,
-    /^Onaylı Kuruluşlar$/i,
-    /^Verified Orgs$/i,
-    /^Reklamlar$/i,
-    /^Ads$/i,
-  ];
-
-  function cleanMenuByText() {
-    const items = document.querySelectorAll('a[role="link"], div[role="menuitem"], div[role="button"]');
-    items.forEach((el) => {
-      const text = (el.textContent || '').trim();
-      if (BANNED_MENU_LABELS.some((regex) => regex.test(text))) {
-        (el as HTMLElement).style.setProperty('display', 'none', 'important');
-      }
-    });
-  }
-
   function restoreFaviconAndTitle() {
     const links = document.querySelectorAll('link[rel*="icon"]');
     links.forEach((link) => {
@@ -159,7 +131,6 @@
 
   const observer = new MutationObserver(() => {
     restoreFaviconAndTitle();
-    cleanMenuByText();
   });
 
   observer.observe(document.documentElement, {

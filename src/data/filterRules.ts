@@ -34,39 +34,39 @@ export const FILTER_RULE_MODULES: FilterRuleModule[] = [
     categoryLabel: 'Üst Tabbar Temizliği',
     title: 'Üst Sekme Satırını (Sana Özel + Takip Edilenler + Konular + Alt Çizgi) Tamamen Kaldır',
     description:
-      'Hem masaüstü hem de Brave Mobil (Android/iOS) görünümünde üst sekme çubuğunu ve altındaki yatay ayırıcı çizgiyi tamamen gizler.',
+      'Yalnızca ScrollSnap-List içeren ana sayfa üst sekme satırını (alt çizgisiyle birlikte) gizler. Ayarlar (/settings) sayfasındaki sekme yapısına dokunmaz.',
     defaultEnabled: true,
-    impactTarget: 'div:has(> div[role="tablist"]), [data-testid="ScrollSnap-List"]',
+    impactTarget: 'div:has([data-testid="ScrollSnap-List"]):not(:has(section))',
     getRules: () => [
       '! Masaüstü ve Mobil (Brave Android/iOS) üst sekme satırını (alt çizgisiyle birlikte) tamamen kaldır',
-      'x.com,twitter.com##div[role="navigation"]:has([data-testid="ScrollSnap-List"])',
-      'x.com,twitter.com##nav[role="navigation"]:has([data-testid="ScrollSnap-List"])',
-      'x.com,twitter.com##div:has(> [data-testid="ScrollSnap-List"])',
-      'x.com,twitter.com##div:has(> div[role="tablist"]):not([data-testid="primaryColumn"])',
+      '! Not: Yalnızca ScrollSnap-List içeren üst bar hedeflenir; Ayarlar (/settings) sayfasındaki tablist kesinlikle etkilenmez.',
+      'x.com,twitter.com##div:has([data-testid="ScrollSnap-List"]):not(:has(section)):not(:has(article)):not(:has([data-testid="cellInnerDiv"])):not(:has(main)):not([data-testid="primaryColumn"])',
+      'x.com,twitter.com##nav:has([data-testid="ScrollSnap-List"]):not(:has(section)):not(:has(article))',
+      'x.com,twitter.com##div[role="tablist"]:has([data-testid="ScrollSnap-List"])',
+      'x.com,twitter.com##[data-testid="ScrollSnap-SwipeableList"]',
       'x.com,twitter.com##[data-testid="ScrollSnap-List"]',
-      'x.com,twitter.com##div[role="tablist"]:has(a[href="/home"])',
     ],
   },
   {
     id: 'hide-plus-icon',
     category: 'for-you',
     categoryLabel: 'Üst Tabbar Temizliği',
-    title: 'Satırın Sağındaki "+" (Artı / Konu & Liste Ekle) İkonunu Kaldır',
+    title: 'Satırın Sağındaki "+" Gri Kutu Alanını ve Butonunu Kaldır',
     description:
-      'Sekme satırının en sağında yer alan "+" (Artı) ikonunu (M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7z) ve sekme listesinin sağındaki kardeş butonları gizler.',
+      'Sekme satırının en sağında kalan gri kare kutuyu (a / button / div kapsayıcısını) ve içindeki "+" ikonunu tamamen gizler; Ayarlar sayfasını etkilemez.',
     defaultEnabled: true,
-    impactTarget: 'svg:has(path[d^="M11 11V4"]), div[role="tablist"] ~ *',
+    impactTarget: 'div[role="tablist"]:has([data-testid="ScrollSnap-List"]) ~ *',
     getRules: () => [
-      '! Satırın en sağında kalan "+" (Artı / Konular / Liste Ekle) ikonunu ve kardeş düğümlerini kaldır',
+      '! Satırın en sağında kalan gri kutuyu ve "+" (Artı / Konular / Liste Ekle) butonunu tüm kapsayıcılarıyla kaldır',
+      'x.com,twitter.com##div[role="tablist"]:has([data-testid="ScrollSnap-List"]) ~ *',
+      'x.com,twitter.com##[data-testid="ScrollSnap-SwipeableList"] ~ *',
       'x.com,twitter.com##[data-testid="ScrollSnap-List"] ~ *',
-      'x.com,twitter.com##div[role="tablist"] ~ *',
-      'x.com,twitter.com##header a:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"])',
-      'x.com,twitter.com##header button:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"])',
-      'x.com,twitter.com##[data-testid="primaryColumn"] a:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"])',
-      'x.com,twitter.com##[data-testid="primaryColumn"] button:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"])',
-      'x.com,twitter.com##a[href*="/topics"]:has(svg path[d^="M11 11V4"])',
-      'x.com,twitter.com##a[href*="/lists"]:has(svg path[d^="M11 11V4"])',
-      'x.com,twitter.com##svg:has(path[d="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7z"])',
+      'x.com,twitter.com##div:has(> a > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has(section)):not(:has(article))',
+      'x.com,twitter.com##div:has(> button > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has(section)):not(:has(article))',
+      'x.com,twitter.com##div:has(> div[role="button"] > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has(section)):not(:has(article))',
+      'x.com,twitter.com##a:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"]):not([href="/compose/post"])',
+      'x.com,twitter.com##button:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"])',
+      'x.com,twitter.com##div[role="button"]:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"])',
     ],
   },
   {
@@ -81,7 +81,6 @@ export const FILTER_RULE_MODULES: FilterRuleModule[] = [
     getRules: () => [
       '! Ana sayfa üst barındaki "For You / Sana Özel" (ilk) sekmesini gizle',
       'x.com,twitter.com##[data-testid="ScrollSnap-List"] > div[role="presentation"]:first-child',
-      'x.com,twitter.com##div[role="tablist"] > div[role="presentation"]:first-child:has(a[href="/home"])',
     ],
   },
   {
@@ -96,7 +95,6 @@ export const FILTER_RULE_MODULES: FilterRuleModule[] = [
     getRules: () => [
       '! Ana sayfa üst barındaki "Following / Takip edilenler" (ikinci) sekmesini gizle',
       'x.com,twitter.com##[data-testid="ScrollSnap-List"] > div[role="presentation"]:nth-child(2)',
-      'x.com,twitter.com##div[role="tablist"] > div[role="presentation"]:nth-child(2):has(a[href="/home"])',
     ],
   },
   {
@@ -343,8 +341,8 @@ export function generateBraveFilterList(config: RepoConfig): string {
 
   const lines: string[] = [
     '[Adblock Plus 2.0]',
-    '! Title: Classic Twitter for Brave Shields (No Tabbar, No Grok, Clean Menu & Classic Bird Logo)',
-    '! Description: Twitter/X üzerinde üstteki "Sana Özel / Takip edilenler / + Konular / +" satırını kaldırır, Grok\'u temizler, menüdeki Aramalar, Premium, Listeler, Topluluklar, İçerik Üreticisi Stüdyosu, Kurumsal ve Reklamlar öğelerini gizler, X logosunu eski klasik Twitter kuşu logosuyla değiştirir.',
+    '! Title: Classic Twitter for Brave Shields (No Tabbar & Gray Box, No Grok, Clean Menu & Classic Bird Logo)',
+    '! Description: Twitter/X üzerinde üstteki "Sana Özel / Takip edilenler / + Konular" satırını ve sağdaki "+" gri kutusunu tamamen kaldırır, Ayarlar sayfasını bozmaz, Grok\'u ve gereksiz menü öğelerini temizler, X logosunu eski klasik Twitter kuşu logosuyla değiştirir.',
     '! Version: 2026.11.01',
     `! Homepage: https://github.com/${config.githubUsername}/${config.repoName}`,
     '! Expires: 1 day (update frequency)',
@@ -356,7 +354,7 @@ export function generateBraveFilterList(config: RepoConfig): string {
     {
       key: 'for-you',
       heading:
-        '1. "SANA ÖZEL", "TAKİP EDİLENLER", "+ KONULAR" VE SAĞDAKİ "+" İKONUNU KALDIRMA',
+        '1. ÜST SEKME SATIRI ("SANA ÖZEL", "TAKİP EDİLENLER", "+ KONULAR") VE SAĞDAKİ GRİ KUTUYU KALDIRMA',
     },
     {
       key: 'grok',
@@ -405,10 +403,10 @@ export function generateUserscript(config: RepoConfig): string {
   const hasLogo = config.enabledRuleIds.some((id) => id.startsWith('restore-'));
 
   return `// ==UserScript==
-// @name         Classic Twitter (No Tabbar, No Grok, Clean Menu & Old Bird Logo)
+// @name         Classic Twitter (No Tabbar & Gray Box, No Grok, Clean Menu & Old Bird Logo)
 // @namespace    https://github.com/${config.githubUsername}/${config.repoName}
-// @version      2.8.0
-// @description  Twitter/X üzerinde "For You", "Takip edilenler", "+ Konular" ve sağdaki "+" ikonunu kaldırır, Grok ve gereksiz menü öğelerini (Aramalar, Premium, Listeler, Topluluklar, İçerik Üreticisi Stüdyosu, Kurumsal, Reklamlar) temizler, klasik mavi Twitter kuşu logosunu geri getirir.
+// @version      2.9.0
+// @description  Twitter/X üzerinde "For You", "Takip edilenler", "+ Konular" ve sağdaki "+" gri kutusunu kaldırır, Ayarlar sayfasını korur, Grok ve gereksiz menü öğelerini temizler, klasik mavi Twitter kuşu logosunu geri getirir.
 // @author       ${config.githubUsername}
 // @match        https://x.com/*
 // @match        https://twitter.com/*
@@ -426,27 +424,28 @@ export function generateUserscript(config: RepoConfig): string {
   style.textContent = \`
     ${
       hasEntireTabbar
-        ? `/* Üst sekme çubuğunu (Sana özel + Takip edilenler + Konular satırı) tamamen gizle */
-    div[role="navigation"]:has([data-testid="ScrollSnap-List"]),
-    nav[role="navigation"]:has([data-testid="ScrollSnap-List"]),
-    div:has(> [data-testid="ScrollSnap-List"]),
-    div:has(> div[role="tablist"]):not([data-testid="primaryColumn"]),
-    [data-testid="ScrollSnap-List"],
-    div[role="tablist"]:has(a[href="/home"]) {
+        ? `/* Üst sekme çubuğunu (Sana özel + Takip edilenler + Konular satırı) tamamen gizle (Ayarlar korunur) */
+    div:has([data-testid="ScrollSnap-List"]):not(:has(section)):not(:has(article)):not(:has([data-testid="cellInnerDiv"])):not(:has(main)):not([data-testid="primaryColumn"]),
+    nav:has([data-testid="ScrollSnap-List"]):not(:has(section)):not(:has(article)),
+    div[role="tablist"]:has([data-testid="ScrollSnap-List"]),
+    [data-testid="ScrollSnap-SwipeableList"],
+    [data-testid="ScrollSnap-List"] {
       display: none !important;
     }`
         : ''
     }
     ${
       hasPlusIcon
-        ? `/* Satırın sağındaki "+" (Artı) ikonunu ve kardeş düğümlerini gizle */
+        ? `/* Satırın sağındaki gri kutuyu ve "+" (Artı) butonunu kapsayıcısıyla birlikte gizle */
+    div[role="tablist"]:has([data-testid="ScrollSnap-List"]) ~ *,
+    [data-testid="ScrollSnap-SwipeableList"] ~ *,
     [data-testid="ScrollSnap-List"] ~ *,
-    div[role="tablist"] ~ *,
-    header a:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]),
-    header button:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]),
-    [data-testid="primaryColumn"] a:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]),
-    [data-testid="primaryColumn"] button:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]),
-    svg:has(path[d="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7z"]) {
+    div:has(> a > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has(section)):not(:has(article)),
+    div:has(> button > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has(section)):not(:has(article)),
+    div:has(> div[role="button"] > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has(section)):not(:has(article)),
+    a:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"]):not([href="/compose/post"]),
+    button:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"]),
+    div[role="button"]:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"]) {
       display: none !important;
     }`
         : ''
@@ -595,9 +594,9 @@ export function generateExtensionManifest(): string {
     {
       manifest_version: 3,
       name: 'Classic Twitter — Clean Menu, No Tabbar, No Grok & Bird Logo',
-      version: '2.8.0',
+      version: '2.9.0',
       description:
-        'Twitter/X üzerinde Sana Özel, Takip edilenler, + Konular, + ikonu, Grok ve gereksiz menü öğelerini kaldırır; eski mavi Twitter kuşu logosunu geri getirir.',
+        'Twitter/X üzerinde Sana Özel, Takip edilenler, + Konular, + gri kutusu, Grok ve gereksiz menü öğelerini kaldırır; Ayarlar sayfasını korur ve eski mavi Twitter kuşu logosunu geri getirir.',
       content_scripts: [
         {
           matches: ['https://x.com/*', 'https://twitter.com/*'],
@@ -619,14 +618,15 @@ export function generateReadme(config: RepoConfig): string {
 
   return `# Classic Twitter for Brave Shields 🐦
 
-Twitter/X arayüzündeki **"For You" (Sana Özel)**, **"Following" (Takip edilenler)**, **"+ Konular" (+ Topics)** ve satırın en sağındaki **"+" (Artı)** ikonunu/sekme çubuğunu (tabbar) tamamen kaldıran, **Grok (Grox)** ve menüdeki gereksiz öğeleri (**Aramalar, Premium, Listeler, Topluluklar, İçerik Üreticisi Stüdyosu, Kurumsal, Reklamlar**) temizleyen ve **X logosunu eski klasik mavi Twitter kuşu (\`#1DA1F2\`)** logosuna dönüştüren **Brave Shields İçerik Filtreleme** listesi.
+Twitter/X arayüzündeki **"For You" (Sana Özel)**, **"Following" (Takip edilenler)**, **"+ Konular" (+ Topics)** ve satırın en sağındaki **"+" (Artı) gri kutu alanını** tamamen kaldıran, **Ayarlar (\`/settings\`)** sayfasını koruyan, **Grok (Grox)** ve menüdeki gereksiz öğeleri (**Aramalar, Premium, Listeler, Topluluklar, İçerik Üreticisi Stüdyosu, Kurumsal, Reklamlar**) temizleyen ve **X logosunu eski klasik mavi Twitter kuşu (\`#1DA1F2\`)** logosuna dönüştüren **Brave Shields İçerik Filtreleme** listesi.
 
 ---
 
 ## ✨ Özellikler
 
-1. **"Sana Özel", "Takip Edilenler", "+ Konular" ve Sağdaki "+" İkonu Temizliği:**
-   - Masaüstü ve Brave Mobil (Android/iOS) üzerinde \`For You (Sana özel)\`, \`Following (Takip edilenler)\`, \`+ Konular\` sekmelerini, satırın en sağındaki \`+\` (artı) butonunu ve alt ayırıcı çizgiyi tamamen kaldırır.
+1. **"Sana Özel", "Takip Edilenler", "+ Konular" ve Sağdaki Gri "+" Kutusu Temizliği:**
+   - Masaüstü ve Brave Mobil (Android/iOS) üzerinde \`For You (Sana özel)\`, \`Following (Takip edilenler)\`, \`+ Konular\` sekmelerini, satırın en sağındaki gri \`+\` (artı) kutusunu ve alt ayırıcı çizgiyi tamamen kaldırır.
+   - Yalnızca \`ScrollSnap-List\` barındıran üst sekme satırını hedefler; **Ayarlar ve gizlilik (\`/settings\`)** sayfasındaki sekme ve içeriklere kesinlikle dokunmaz.
 2. **Grok (Grox) Tam Temizliği:**
    - Sol menüdeki (\`nav\`) Grok sekmesini, sağ alt köşedeki açılır Grok çekmecesini (\`GrokDrawer\`), gönderi üstü Grok özet butonlarını ve sağ sütun tanıtım kartlarını gizler.
 3. **Sol Menü ve Mobil Profil Çekmecesi Temizliği:**

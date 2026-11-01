@@ -1,33 +1,34 @@
 [Adblock Plus 2.0]
-! Title: Classic Twitter for Brave Shields (No Tabbar, No Grok, Clean Menu & Classic Bird Logo)
-! Description: Twitter/X üzerinde üstteki "Sana Özel / Takip edilenler / + Konular / +" satırını kaldırır, Grok'u temizler, menüdeki Aramalar, Premium, Listeler, Topluluklar, İçerik Üreticisi Stüdyosu, Kurumsal ve Reklamlar öğelerini gizler, X logosunu klasik mavi Twitter kuşu yapar.
+! Title: Classic Twitter for Brave Shields (No Tabbar & Gray Box, No Grok, Clean Menu & Classic Bird Logo)
+! Description: Twitter/X üzerinde üstteki "Sana Özel / Takip edilenler / + Konular" satırını ve sağdaki "+" gri kutusunu tamamen kaldırır, Ayarlar sayfasını bozmaz, Grok'u ve gereksiz menü öğelerini temizler, X logosunu klasik mavi Twitter kuşu yapar.
 ! Version: 2026.11.01
 ! Homepage: https://github.com/classic-twitter/brave-shields-filter
 ! Expires: 1 day (update frequency)
 ! License: MIT
 
 ! ============================================================================
-! 1. "SANA ÖZEL", "TAKİP EDİLENLER", "+ KONULAR" VE SAĞDAKİ "+" İKONUNU KALDIRMA
+! 1. ÜST SEKME SATIRI ("SANA ÖZEL", "TAKİP EDİLENLER", "+ KONULAR") VE
+!    SAĞDAKİ "+" GRİ KUTU ALANINI TAMAMEN KALDIRMA (AYARLAR SAYFASI KORUNUR)
 ! ============================================================================
 
-! Masaüstü ve Mobil (Brave Android/iOS) üst sekme satırını (alt çizgisiyle birlikte) tamamen kaldır
-x.com,twitter.com##div[role="navigation"]:has([data-testid="ScrollSnap-List"])
-x.com,twitter.com##nav[role="navigation"]:has([data-testid="ScrollSnap-List"])
-x.com,twitter.com##div:has(> [data-testid="ScrollSnap-List"])
-x.com,twitter.com##div:has(> div[role="tablist"]):not([data-testid="primaryColumn"])
+! Masaüstü ve Mobil (Brave Android/iOS) üst sekme satırını, sağdaki gri kutuyu ve alt çizgisini tamamen kaldır
+! Not: Yalnızca ScrollSnap-List içeren üst bar hedeflenir; Ayarlar (/settings) sayfasındaki tablist kesinlikle etkilenmez.
+x.com,twitter.com##div:has([data-testid="ScrollSnap-List"]):not(:has(section)):not(:has(article)):not(:has([data-testid="cellInnerDiv"])):not(:has(main)):not([data-testid="primaryColumn"])
+x.com,twitter.com##nav:has([data-testid="ScrollSnap-List"]):not(:has(section)):not(:has(article))
+x.com,twitter.com##div[role="tablist"]:has([data-testid="ScrollSnap-List"])
+x.com,twitter.com##[data-testid="ScrollSnap-SwipeableList"]
 x.com,twitter.com##[data-testid="ScrollSnap-List"]
-x.com,twitter.com##div[role="tablist"]:has(a[href="/home"])
 
-! Satırın en sağında kalan "+" (Artı / Konular / Liste Ekle) ikonunu ve kardeş düğümlerini kaldır
+! Satırın en sağında kalan gri kutuyu ve "+" (Artı / Konular / Liste Ekle) butonunu tüm kapsayıcılarıyla kaldır
+x.com,twitter.com##div[role="tablist"]:has([data-testid="ScrollSnap-List"]) ~ *
+x.com,twitter.com##[data-testid="ScrollSnap-SwipeableList"] ~ *
 x.com,twitter.com##[data-testid="ScrollSnap-List"] ~ *
-x.com,twitter.com##div[role="tablist"] ~ *
-x.com,twitter.com##header a:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"])
-x.com,twitter.com##header button:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"])
-x.com,twitter.com##[data-testid="primaryColumn"] a:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"])
-x.com,twitter.com##[data-testid="primaryColumn"] button:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"])
-x.com,twitter.com##a[href*="/topics"]:has(svg path[d^="M11 11V4"])
-x.com,twitter.com##a[href*="/lists"]:has(svg path[d^="M11 11V4"])
-x.com,twitter.com##svg:has(path[d="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7z"])
+x.com,twitter.com##div:has(> a > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has(section)):not(:has(article))
+x.com,twitter.com##div:has(> button > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has(section)):not(:has(article))
+x.com,twitter.com##div:has(> div[role="button"] > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has(section)):not(:has(article))
+x.com,twitter.com##a:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"]):not([href="/compose/post"])
+x.com,twitter.com##button:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"])
+x.com,twitter.com##div[role="button"]:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"])
 
 ! Satır içindeki tüm sekmeleri (1. Sana özel, 2. Takip edilenler, 3. + Konular) ve kaydırma oklarını gizle
 x.com,twitter.com##[data-testid="ScrollSnap-List"] > div[role="presentation"]
