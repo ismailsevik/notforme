@@ -29,35 +29,68 @@ export function buildBirdSvgDataUri(hexColor: string): string {
 
 export const FILTER_RULE_MODULES: FilterRuleModule[] = [
   {
+    id: 'hide-entire-tabbar',
+    category: 'for-you',
+    categoryLabel: 'Üst Tabbar Temizliği',
+    title: 'Üst Sekme Çubuğunu (Sana Özel + Takip Edilenler + Konular) Tamamen Kaldır',
+    description:
+      'Ana sayfa zaman akışının üst kısmındaki yapışkan sekme satırını ("Sana özel", "Takip edilenler" ve sağdaki "+ Konular") tamamen gizler.',
+    defaultEnabled: true,
+    impactTarget: '[data-testid="primaryColumn"] [data-testid="ScrollSnap-List"]',
+    getRules: () => [
+      '! Ana sayfa üst sekme çubuğunu (Sana özel + Takip edilenler + Konular satırı) tamamen kaldır',
+      'x.com,twitter.com##[data-testid="primaryColumn"] div[role="navigation"]:has([data-testid="ScrollSnap-List"])',
+      'x.com,twitter.com##[data-testid="primaryColumn"] > div > div > div:has([data-testid="ScrollSnap-List"])',
+      'x.com,twitter.com##[data-testid="primaryColumn"] [data-testid="ScrollSnap-List"]',
+      'x.com,twitter.com##div[role="tablist"]:has(a[href="/home"])',
+    ],
+  },
+  {
     id: 'hide-for-you-tab',
     category: 'for-you',
-    categoryLabel: 'For You Sekmesi',
-    title: '"For You / Sana Özel" Sekmesini Gizle ve "Following"i Ortala',
+    categoryLabel: 'Üst Tabbar Temizliği',
+    title: '"For You / Sana Özel" Sekmesini Kaldır',
     description:
-      'Ana sayfa zaman akışındaki algoritmik "For You (Sana Özel)" sekmesini DOM üzerinden gizler ve "Following (Takip edilenler)" sekmesini tam genişliğe yayar.',
+      'Ana sayfa üst barındaki algoritmik "For You (Sana Özel)" (1. sekme) düğümünü DOM üzerinden gizler.',
     defaultEnabled: true,
     impactTarget: '[data-testid="ScrollSnap-List"] > div:first-child',
     getRules: () => [
       '! Ana sayfa üst barındaki "For You / Sana Özel" (ilk) sekmesini gizle',
       'x.com,twitter.com##[data-testid="ScrollSnap-List"] > div[role="presentation"]:first-child',
       'x.com,twitter.com##div[role="tablist"] > div[role="presentation"]:first-child:has(a[href="/home"])',
-      '! "Following / Takip edilenler" sekmesini tam genişlikte ortala',
-      'x.com,twitter.com##[data-testid="ScrollSnap-List"] > div[role="presentation"]:nth-child(2):style(flex: 1 1 100% !important; max-width: 100% !important;)',
     ],
   },
   {
-    id: 'hide-entire-tabbar',
+    id: 'hide-following-tab',
     category: 'for-you',
-    categoryLabel: 'For You Sekmesi',
-    title: 'Üst Sekme Çubuğunu (Tabbar) Tamamen Kaldır',
+    categoryLabel: 'Üst Tabbar Temizliği',
+    title: '"Following / Takip Edilenler" Sekmesini Kaldır',
     description:
-      'Yalnızca "Takip edilenler" akışını kullanıyorsanız üstteki yapışkan sekme barını tamamen kaldırarak dikey okuma alanını genişletir.',
-    defaultEnabled: false,
-    impactTarget: '[data-testid="primaryColumn"] [data-testid="ScrollSnap-List"]',
+      'Ana sayfa üst barındaki "Following (Takip edilenler)" (2. sekme) düğümünü DOM üzerinden gizler.',
+    defaultEnabled: true,
+    impactTarget: '[data-testid="ScrollSnap-List"] > div:nth-child(2)',
     getRules: () => [
-      '! Üst sekme çubuğunu (For You / Following tabbar) tamamen kaldır',
-      'x.com,twitter.com##[data-testid="primaryColumn"] div[role="navigation"]:has([data-testid="ScrollSnap-List"])',
-      'x.com,twitter.com##[data-testid="primaryColumn"] > div > div > div:has([data-testid="ScrollSnap-List"])',
+      '! Ana sayfa üst barındaki "Following / Takip edilenler" (ikinci) sekmesini gizle',
+      'x.com,twitter.com##[data-testid="ScrollSnap-List"] > div[role="presentation"]:nth-child(2)',
+      'x.com,twitter.com##div[role="tablist"] > div[role="presentation"]:nth-child(2):has(a[href="/home"])',
+    ],
+  },
+  {
+    id: 'hide-topics-tab',
+    category: 'for-you',
+    categoryLabel: 'Üst Tabbar Temizliği',
+    title: 'Satırın Sağındaki "+ Konular (Topics / Listeler)" Kısmını Kaldır',
+    description:
+      'Üst sekme satırının sağ tarafında yer alan "+ Konular (+ Topics)", sabitlenmiş listeler ve yatay kaydırma oklarını gizler.',
+    defaultEnabled: true,
+    impactTarget: '[data-testid="ScrollSnap-List"] > div:nth-child(n+3)',
+    getRules: () => [
+      '! Satırın sağında kalan "+ Konular / Topics", sabitlenmiş listeler ve kaydırma oklarını gizle',
+      'x.com,twitter.com##[data-testid="ScrollSnap-List"] > div[role="presentation"]:nth-child(n+3)',
+      'x.com,twitter.com##[data-testid="ScrollSnap-List"] a[href*="/topics"]',
+      'x.com,twitter.com##[data-testid="ScrollSnap-List"] a[href*="/lists"]',
+      'x.com,twitter.com##[data-testid="ScrollSnap-nextButtonWrapper"]',
+      'x.com,twitter.com##[data-testid="ScrollSnap-prevButtonWrapper"]',
     ],
   },
   {
@@ -190,8 +223,8 @@ export function generateBraveFilterList(config: RepoConfig): string {
 
   const lines: string[] = [
     '[Adblock Plus 2.0]',
-    '! Title: Classic Twitter for Brave Shields (No For You, No Grok, Classic Bird Logo)',
-    '! Description: Twitter/X üzerinde "For You / Sana Özel" sekmesini kaldırır, Grok (Grox) yapay zeka butonlarını gizler, X logosunu eski klasik Twitter kuşu logosuyla değiştirir.',
+    '! Title: Classic Twitter for Brave Shields (No For You, Following & +Konular Tabbar, No Grok, Classic Bird Logo)',
+    '! Description: Twitter/X üzerinde "For You / Sana Özel", "Following / Takip edilenler" ve "+ Konular" üst sekme çubuğunu kaldırır, Grok (Grox) yapay zeka butonlarını gizler, X logosunu eski klasik Twitter kuşu logosuyla değiştirir.',
     '! Version: 2026.11.01',
     `! Homepage: https://github.com/${config.githubUsername}/${config.repoName}`,
     '! Expires: 1 day (update frequency)',
@@ -202,7 +235,8 @@ export function generateBraveFilterList(config: RepoConfig): string {
   const categories: { key: RuleCategory; heading: string }[] = [
     {
       key: 'for-you',
-      heading: '1. "FOR YOU" (SANA ÖZEL) SEKMESİNİ VE TABBARI KALDIRMA',
+      heading:
+        '1. "SANA ÖZEL", "TAKİP EDİLENLER" VE "+ KONULAR" ÜST TABBARINI KALDIRMA',
     },
     {
       key: 'grok',
@@ -237,15 +271,17 @@ export function generateBraveFilterList(config: RepoConfig): string {
 export function generateUserscript(config: RepoConfig): string {
   const birdDataUri = buildBirdSvgDataUri(config.logoColor);
   const hasForYou = config.enabledRuleIds.includes('hide-for-you-tab');
+  const hasFollowing = config.enabledRuleIds.includes('hide-following-tab');
+  const hasTopics = config.enabledRuleIds.includes('hide-topics-tab');
   const hasEntireTabbar = config.enabledRuleIds.includes('hide-entire-tabbar');
   const hasGrok = config.enabledRuleIds.some((id) => id.startsWith('hide-grok'));
   const hasLogo = config.enabledRuleIds.some((id) => id.startsWith('restore-'));
 
   return `// ==UserScript==
-// @name         Classic Twitter (No For You, No Grok, Old Bird Logo & Favicon)
+// @name         Classic Twitter (No For You, Following & +Konular Tabbar, No Grok, Old Bird Logo & Favicon)
 // @namespace    https://github.com/${config.githubUsername}/${config.repoName}
-// @version      2.4.0
-// @description  Twitter/X üzerinde "For You" sekmesini kaldırıp otomatik "Following" sekmesine geçer, Grok (Grox) öğelerini temizler, sol üst logoyu ve tarayıcı sekme ikonunu (favicon) klasik mavi Twitter kuşu yapar.
+// @version      2.6.0
+// @description  Twitter/X üzerinde "For You", "Takip edilenler" ve "+ Konular" üst sekme çubuğunu kaldırır, Grok (Grox) öğelerini temizler, sol üst logoyu ve tarayıcı sekme ikonunu (favicon) klasik mavi Twitter kuşu yapar.
 // @author       ${config.githubUsername}
 // @match        https://x.com/*
 // @match        https://twitter.com/*
@@ -262,21 +298,40 @@ export function generateUserscript(config: RepoConfig): string {
   style.id = 'birdshield-classic-twitter-style';
   style.textContent = \`
     ${
-      hasForYou
-        ? `/* "For You / Sana Özel" sekmesini gizle */
-    [data-testid="ScrollSnap-List"] > div[role="presentation"]:first-child {
+      hasEntireTabbar
+        ? `/* Üst sekme çubuğunu (Sana özel + Takip edilenler + Konular satırı) tamamen gizle */
+    [data-testid="primaryColumn"] div[role="navigation"]:has([data-testid="ScrollSnap-List"]),
+    [data-testid="primaryColumn"] > div > div > div:has([data-testid="ScrollSnap-List"]),
+    [data-testid="primaryColumn"] [data-testid="ScrollSnap-List"],
+    div[role="tablist"]:has(a[href="/home"]) {
       display: none !important;
-    }
-    [data-testid="ScrollSnap-List"] > div[role="presentation"]:nth-child(2) {
-      flex: 1 1 100% !important;
-      max-width: 100% !important;
     }`
         : ''
     }
     ${
-      hasEntireTabbar
-        ? `/* Üst sekme çubuğunu tamamen gizle */
-    [data-testid="primaryColumn"] div[role="navigation"]:has([data-testid="ScrollSnap-List"]) {
+      hasForYou
+        ? `/* "For You / Sana Özel" sekmesini gizle */
+    [data-testid="ScrollSnap-List"] > div[role="presentation"]:first-child {
+      display: none !important;
+    }`
+        : ''
+    }
+    ${
+      hasFollowing
+        ? `/* "Following / Takip edilenler" sekmesini gizle */
+    [data-testid="ScrollSnap-List"] > div[role="presentation"]:nth-child(2) {
+      display: none !important;
+    }`
+        : ''
+    }
+    ${
+      hasTopics
+        ? `/* Satırın sağındaki "+ Konular (Topics / Lists)" sekmesini ve kaydırma oklarını gizle */
+    [data-testid="ScrollSnap-List"] > div[role="presentation"]:nth-child(n+3),
+    [data-testid="ScrollSnap-List"] a[href*="/topics"],
+    [data-testid="ScrollSnap-List"] a[href*="/lists"],
+    [data-testid="ScrollSnap-nextButtonWrapper"],
+    [data-testid="ScrollSnap-prevButtonWrapper"] {
       display: none !important;
     }`
         : ''
@@ -333,21 +388,8 @@ export function generateUserscript(config: RepoConfig): string {
     }
   }
 
-  function switchToFollowingTab() {
-    if (window.location.pathname !== '/home') return;
-    const tabs = document.querySelectorAll('[data-testid="ScrollSnap-List"] a[role="tab"]');
-    if (tabs.length >= 2) {
-      const firstTab = tabs[0];
-      const secondTab = tabs[1];
-      if (firstTab.getAttribute('aria-selected') === 'true') {
-        secondTab.click();
-      }
-    }
-  }
-
   const observer = new MutationObserver(() => {
     restoreFaviconAndTitle();
-    switchToFollowingTab();
   });
 
   observer.observe(document.documentElement, {
@@ -362,10 +404,10 @@ export function generateExtensionManifest(): string {
   return JSON.stringify(
     {
       manifest_version: 3,
-      name: 'Classic Twitter — No For You, No Grok & Bird Logo',
-      version: '2.4.0',
+      name: 'Classic Twitter — No Tabbar (+Konular), No Grok & Bird Logo',
+      version: '2.6.0',
       description:
-        'Twitter/X üzerinde For You sekmesini ve Grok öğelerini kaldırır, eski mavi Twitter kuşu logosunu ve sekme ikonunu geri getirir.',
+        'Twitter/X üzerinde Sana Özel, Takip edilenler ve + Konular sekme çubuğunu ve Grok öğelerini kaldırır, eski mavi Twitter kuşu logosunu ve sekme ikonunu geri getirir.',
       content_scripts: [
         {
           matches: ['https://x.com/*', 'https://twitter.com/*'],
@@ -387,15 +429,14 @@ export function generateReadme(config: RepoConfig): string {
 
   return `# Classic Twitter for Brave Shields 🐦
 
-Twitter/X arayüzündeki **"For You" (Sana Özel)** sekmesini kaldıran, **Grok (Grox)** yapay zeka butonlarını/panellerini tamamen temizleyen ve **X logosunu eski klasik mavi Twitter kuşu (\`#1DA1F2\`)** logosuna dönüştüren **Brave Shields İçerik Filtreleme** listesi ve yardımcı betik paketi.
+Twitter/X arayüzündeki **"For You" (Sana Özel)**, **"Following" (Takip edilenler)** ve satırın sağındaki **"+ Konular" (+ Topics)** üst sekme çubuğunu (tabbar) tamamen kaldıran, **Grok (Grox)** yapay zeka butonlarını/panellerini temizleyen ve **X logosunu eski klasik mavi Twitter kuşu (\`#1DA1F2\`)** logosuna dönüştüren **Brave Shields İçerik Filtreleme** listesi ve yardımcı betik paketi.
 
 ---
 
 ## ✨ Özellikler
 
-1. **"For You / Sana Özel" Tabbar Temizliği:**
-   - Ana sayfa zaman akışındaki algoritmik \`For You\` sekmesini gizler ve \`Following / Takip edilenler\` sekmesini ortalar.
-   - İsteğe bağlı kural ile üst sekme çubuğunu tamamen gizleyerek dikey okuma alanını genişletir.
+1. **"Sana Özel", "Takip Edilenler" ve "+ Konular" Üst Tabbar Temizliği:**
+   - Ana sayfa zaman akışının tepesindeki \`For You (Sana özel)\`, \`Following (Takip edilenler)\` ve sağdaki \`+ Konular (+ Topics)\` sekmelerini ve sekme çubuğunu (\`ScrollSnap-List\`) tamamen kaldırır.
 2. **Grok (Grox) Tam Temizliği:**
    - Sol menüdeki (\`nav\`) Grok sekmesini kaldırır.
    - Sağ alt köşedeki açılır Grok sohbet çekmecesini (\`GrokDrawer\`) gizler.
@@ -435,21 +476,12 @@ GitHub URL'si kullanmadan doğrudan kuralları yapıştırmak isterseniz:
 
 ---
 
-## 🧩 Tarayıcı Sekme İkonu (Favicon) ve Otomatik "Takip Edilenler" Geçişi (İsteğe Bağlı)
-
-Brave Shields kozmetik filtreleri sayfa içi logoyu (\`svg\`) değiştirir. Tarayıcı sekmesindeki küçük ikonu (\`favicon\`) da mavi Twitter kuşu yapmak ve sayfa açıldığında otomatik olarak **Takip edilenler (Following)** sekmesine tıklanmasını sağlamak için:
-
-- **Userscript (Tampermonkey / Violentmonkey):** [\`userscript/classic-twitter.user.js\`](./userscript/classic-twitter.user.js) dosyasını kurun.
-- **Paketlenmemiş Tarayıcı Eklentisi (Brave / Chrome):** \`brave://extensions\` sayfasından **Geliştirici modu**'nu açıp \`extension/\` klasörünü **"Paketlenmemiş öğe yükle" (Load unpacked)** ile seçin.
-
----
-
 ## 📁 Depo Dosya Yapısı
 
 \`\`\`text
 ├── filters.txt                        # Brave Shields & uBlock Origin ana filtre listesi
 ├── userscript/
-│   └── classic-twitter.user.js        # Favicon, başlık ve otomatik Following sekmesi betiği
+│   └── classic-twitter.user.js        # Favicon ve başlık değişimi içeren Tampermonkey betiği
 ├── extension/
 │   ├── manifest.json                  # Manifest V3 Brave/Chrome eklenti yapılandırması
 │   └── content.js                     # Eklenti içerik betiği

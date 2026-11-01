@@ -32,8 +32,13 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
   const isRuleActive = (id: string) =>
     shieldsActive && config.enabledRuleIds.includes(id);
 
-  const hideForYouTab = isRuleActive('hide-for-you-tab');
   const hideEntireTabbar = isRuleActive('hide-entire-tabbar');
+  const hideForYouTab = isRuleActive('hide-for-you-tab') || hideEntireTabbar;
+  const hideFollowingTab = isRuleActive('hide-following-tab') || hideEntireTabbar;
+  const hideTopicsTab = isRuleActive('hide-topics-tab') || hideEntireTabbar;
+  const isTabbarCompletelyHidden =
+    hideEntireTabbar || (hideForYouTab && hideFollowingTab && hideTopicsTab);
+
   const hideGrokSidebar = isRuleActive('hide-grok-sidebar');
   const hideGrokDrawer = isRuleActive('hide-grok-drawer');
   const hideGrokTweetActions = isRuleActive('hide-grok-tweet-actions');
@@ -42,8 +47,10 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
   const restoreBirdPostButton = isRuleActive('restore-bird-post-button');
 
   const blockedElementsCount = [
-    hideForYouTab,
     hideEntireTabbar,
+    isRuleActive('hide-for-you-tab'),
+    isRuleActive('hide-following-tab'),
+    isRuleActive('hide-topics-tab'),
     hideGrokSidebar,
     hideGrokDrawer,
     hideGrokTweetActions,
@@ -94,7 +101,7 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
           <button
             type="button"
             onClick={() => setShowXray((prev) => !prev)}
-            className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors whitespace-nowrap shrink-0 flex items-center gap-1.5 cursor-pointer ${
               showXray
                 ? 'border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-400'
                 : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
@@ -108,7 +115,7 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
             <button
               type="button"
               onClick={() => setShieldsActive(false)}
-              className={`px-3 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 ${
+              className={`px-3 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
                 !shieldsActive
                   ? 'bg-white dark:bg-slate-950 text-slate-900 dark:text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -119,7 +126,7 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
             <button
               type="button"
               onClick={() => setShieldsActive(true)}
-              className={`px-3 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 ${
+              className={`px-3 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
                 shieldsActive
                   ? 'bg-[#1DA1F2] text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -244,41 +251,71 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
         {/* Center Primary Feed Column ([data-testid="primaryColumn"]) */}
         <div className="col-span-9 sm:col-span-6 lg:col-span-6 border-r border-neutral-800 flex flex-col">
           {/* Top Timeline Tabbar ([data-testid="ScrollSnap-List"]) */}
-          {(!hideEntireTabbar || showXray) && (
+          {(!isTabbarCompletelyHidden || showXray) && (
             <div
               className={`border-b border-neutral-800 bg-black/85 backdrop-blur-xs flex items-center ${
-                hideEntireTabbar && showXray ? 'opacity-35 ring-1 ring-rose-500/60' : ''
+                isTabbarCompletelyHidden && showXray
+                  ? 'opacity-35 ring-1 ring-rose-500/60 bg-rose-950/20'
+                  : ''
               }`}
               title='[data-testid="ScrollSnap-List"]'
             >
               {/* First Child: "For You / Sana Özel" Tab */}
               {(!hideForYouTab || showXray) && (
                 <div
-                  className={`flex-1 py-3.5 text-center text-sm relative transition-opacity ${
+                  className={`flex-1 py-3 px-2 text-center text-xs sm:text-sm relative transition-opacity ${
                     hideForYouTab && showXray
-                      ? 'opacity-35 bg-rose-950/30 line-through text-rose-300'
+                      ? 'opacity-40 bg-rose-950/30 line-through text-rose-300'
                       : 'text-neutral-400 hover:bg-neutral-900/40'
                   }`}
                 >
-                  <span>Sana özel (For you)</span>
-                  {!hideForYouTab && (
-                    <div className="mt-1 text-[10px] font-mono text-neutral-500">
-                      first-child
-                    </div>
-                  )}
+                  <span>Sana özel</span>
                   {showXray && (
                     <div className="mt-0.5 text-[10px] font-mono text-rose-400">
-                      :first-child gizlendi
+                      :first-child
                     </div>
                   )}
                 </div>
               )}
 
               {/* Second Child: "Following / Takip edilenler" Tab */}
-              <div className="flex-1 py-3.5 text-center text-sm font-bold text-white relative">
-                <span>Takip edilenler</span>
-                <div className="mx-auto mt-2 h-1 w-20 rounded-full bg-[#1DA1F2]" />
-              </div>
+              {(!hideFollowingTab || showXray) && (
+                <div
+                  className={`flex-1 py-3 px-2 text-center text-xs sm:text-sm font-bold relative transition-opacity ${
+                    hideFollowingTab && showXray
+                      ? 'opacity-40 bg-rose-950/30 line-through text-rose-300'
+                      : 'text-white'
+                  }`}
+                >
+                  <span>Takip edilenler</span>
+                  {!hideFollowingTab && (
+                    <div className="mx-auto mt-2 h-1 w-16 rounded-full bg-[#1DA1F2]" />
+                  )}
+                  {showXray && (
+                    <div className="mt-0.5 text-[10px] font-mono text-rose-400">
+                      :nth-child(2)
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Third+ Child on the right: "+ Konular (+ Topics)" Tab */}
+              {(!hideTopicsTab || showXray) && (
+                <div
+                  className={`flex-1 py-3 px-2 text-center text-xs sm:text-sm relative transition-opacity ${
+                    hideTopicsTab && showXray
+                      ? 'opacity-40 bg-rose-950/30 line-through text-rose-300'
+                      : 'text-neutral-400 hover:bg-neutral-900/40'
+                  }`}
+                >
+                  <span>+ Konular</span>
+                  {showXray && (
+                    <div className="mt-0.5 text-[10px] font-mono text-rose-400">
+                      :nth-child(n+3)
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
@@ -318,7 +355,7 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
                   </div>
 
                   <p className="mt-1.5 text-sm text-neutral-200 leading-relaxed">
-                    Brave Shields içerik filtreleme motoru ile herhangi bir eklentiye gerek kalmadan algoritmik &quot;Sana Özel&quot; sekmesini kaldırabilir, Grok butonlarını temizleyebilir ve klasik mavi Twitter kuşunu geri getirebilirsiniz.
+                    Üst satırdaki &quot;Sana özel&quot;, &quot;Takip edilenler&quot; ve sağdaki &quot;+ Konular&quot; sekme çubuğu (tabbar) tamamen kaldırıldı! Akış doğrudan gönderilerle başlıyor, Grok temizlendi ve sol üstte klasik mavi Twitter kuşu yer alıyor.
                   </p>
 
                   <div className="mt-3 flex items-center justify-between max-w-xs text-neutral-500 text-xs font-mono tabular-nums">

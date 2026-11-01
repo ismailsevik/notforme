@@ -310,7 +310,7 @@ export default function App() {
               </h1>
 
               <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
-                Twitter/X üzerindeki algoritmik <strong>&quot;For You / Sana Özel&quot;</strong> sekmesini kaldırın, tüm <strong>Grok (Grox)</strong> buton ve çekmecelerini gizleyin ve sol üst logoyu <strong>eski klasik mavi Twitter kuşu</strong> ile değiştirin. Kuralları özelleştirip doğrudan GitHub deponuza yükleyin veya <code className="font-mono text-xs text-[#1DA1F2]">brave://settings/shields/filters</code> adresine ekleyin.
+                Twitter/X üzerindeki <strong>&quot;Sana Özel (For You)&quot;</strong>, <strong>&quot;Takip Edilenler (Following)&quot;</strong> ve satırın sağındaki <strong>&quot;+ Konular&quot;</strong> üst sekme çubuğunu (tabbar) tamamen kaldırın, tüm <strong>Grok (Grox)</strong> buton ve çekmecelerini gizleyin ve sol üst logoyu <strong>eski klasik mavi Twitter kuşu</strong> ile değiştirin.
               </p>
             </div>
 
@@ -690,10 +690,10 @@ export default function App() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 p-4 text-xs">
                 <div className="space-y-1">
                   <div className="font-semibold text-slate-900 dark:text-white">
-                    For You Sekme Kaldırma
+                    Üst Tabbar &amp; + Konular Kaldırma
                   </div>
                   <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                    <code className="font-mono text-[#1DA1F2]">ScrollSnap-List</code> altındaki ilk sekme düğümünü gizler ve <code className="font-mono">Following</code> sekmesini %100 genişliğe uzatır.
+                    <code className="font-mono text-[#1DA1F2]">ScrollSnap-List</code> satırındaki &quot;Sana özel&quot;, &quot;Takip edilenler&quot; ve sağdaki &quot;+ Konular&quot; sekmelerini tamamen gizler.
                   </p>
                 </div>
                 <div className="space-y-1">

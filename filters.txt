@@ -1,24 +1,27 @@
 [Adblock Plus 2.0]
-! Title: Classic Twitter for Brave Shields (No For You, No Grok, Classic Bird Logo)
-! Description: Twitter/X üzerinde "For You / Sana Özel" sekmesini kaldırır, Grok (Grox) yapay zeka butonlarını ve panellerini gizler, X logosunu klasik mavi Twitter kuşu logosuyla değiştirir.
+! Title: Classic Twitter for Brave Shields (No For You, Following & +Konular Tabbar, No Grok, Classic Bird Logo)
+! Description: Twitter/X üzerinde üstteki "For You / Sana Özel", "Following / Takip edilenler" ve "+ Konular / Topics" sekme çubuğunu (tabbar) tamamen kaldırır, Grok (Grox) yapay zeka butonlarını ve panellerini gizler, X logosunu klasik mavi Twitter kuşu logosuyla değiştirir.
 ! Version: 2026.11.01
 ! Homepage: https://github.com/classic-twitter/brave-shields-filter
 ! Expires: 1 day (update frequency)
 ! License: MIT
 
 ! ============================================================================
-! 1. "FOR YOU" (SANA ÖZEL) SEKMESİNİ VE TABBARI KALDIRMA
+! 1. "SANA ÖZEL", "TAKİP EDİLENLER" VE "+ KONULAR" ÜST TABBARINI KALDIRMA
 ! ============================================================================
 
-! Ana sayfa zaman akışındaki "For You / Sana Özel" (ilk) sekmesini gizle
-x.com,twitter.com##[data-testid="ScrollSnap-List"] > div[role="presentation"]:first-child
-x.com,twitter.com##div[role="tablist"] > div[role="presentation"]:first-child:has(a[href="/home"])
+! Ana sayfa üst sekme çubuğunu (Sana özel + Takip edilenler + Konular satırı) tamamen kaldır
+x.com,twitter.com##[data-testid="primaryColumn"] div[role="navigation"]:has([data-testid="ScrollSnap-List"])
+x.com,twitter.com##[data-testid="primaryColumn"] > div > div > div:has([data-testid="ScrollSnap-List"])
+x.com,twitter.com##[data-testid="primaryColumn"] [data-testid="ScrollSnap-List"]
+x.com,twitter.com##div[role="tablist"]:has(a[href="/home"])
 
-! "Following / Takip edilenler" sekmesini tam genişlikte ortala
-x.com,twitter.com##[data-testid="ScrollSnap-List"] > div[role="presentation"]:nth-child(2):style(flex: 1 1 100% !important; max-width: 100% !important;)
-
-! İsteğe bağlı: Üst sekme çubuğunu (For You / Following tabbar) tamamen gizlemek için aşağıdaki satırın başındaki ünlemi kaldırın:
- x.com,twitter.com##[data-testid="primaryColumn"] div[role="navigation"]:has([data-testid="ScrollSnap-List"])
+! Satırdaki tüm sekmeleri (1. Sana özel, 2. Takip edilenler ve sağdaki + Konular / Topics) ve kaydırma oklarını gizle
+x.com,twitter.com##[data-testid="ScrollSnap-List"] > div[role="presentation"]
+x.com,twitter.com##[data-testid="ScrollSnap-List"] a[href*="/topics"]
+x.com,twitter.com##[data-testid="ScrollSnap-List"] a[href*="/lists"]
+x.com,twitter.com##[data-testid="ScrollSnap-nextButtonWrapper"]
+x.com,twitter.com##[data-testid="ScrollSnap-prevButtonWrapper"]
 
 ! ============================================================================
 ! 2. GROK (GROX) BUTONLARINI, SEKME VE PANELLERİNİ KALDIRMA
