@@ -355,7 +355,60 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
 
         {/* Center Primary Feed Column ([data-testid="primaryColumn"]) */}
         <div className="col-span-8 sm:col-span-5 lg:col-span-6 border-r border-neutral-800 flex flex-col">
-          {/* Top Timeline Tabbar ([data-testid="ScrollSnap-List"] + right "+" icon) */}
+          {/* KEPT: 1st Row Mobile Top Bar ([data-testid="TopNavBar"]: Profile Avatar + Center Bird Logo) */}
+          <div
+            className={`px-4 py-2.5 border-b border-neutral-800/80 bg-black/90 flex items-center justify-between ${
+              showXray ? 'ring-1 ring-emerald-500/50' : ''
+            }`}
+            title='[data-testid="TopNavBar"] (Korundu: Profil Resmi + Kuş Logosu)'
+          >
+            {/* Left: User Profile Avatar (Opens Drawer for Settings) */}
+            <div className="flex items-center gap-2">
+              <div
+                className="w-7 h-7 rounded-full bg-[#1DA1F2]/25 border border-[#1DA1F2] flex items-center justify-center text-[11px] font-bold text-[#1DA1F2]"
+                title='[data-testid="DashButton_ProfileIcon_Link"] / UserAvatar (Korundu)'
+              >
+                PR
+              </div>
+              {showXray && (
+                <span className="text-[10px] font-mono text-emerald-400">
+                  Profil (Korundu)
+                </span>
+              )}
+            </div>
+
+            {/* Center: Classic Twitter Bird Logo */}
+            <div className="flex items-center gap-1.5">
+              {restoreHeaderBirdLogo ? (
+                <svg
+                  viewBox="0 0 24 24"
+                  className="w-6 h-6"
+                  style={{ fill: config.logoColor }}
+                  aria-label="Classic Twitter Bird"
+                >
+                  <path d={CLASSIC_TWITTER_BIRD_PATH} />
+                </svg>
+              ) : (
+                <svg
+                  viewBox="0 0 24 24"
+                  className="w-5 h-5 fill-white"
+                  aria-label="X Logo"
+                >
+                  <path d={X_LOGO_PATH} />
+                </svg>
+              )}
+              {showXray && (
+                <span className="text-[10px] font-mono text-[#1DA1F2]">
+                  28x28px Bird
+                </span>
+              )}
+            </div>
+
+            {/* Right spacer to keep Bird centered */}
+            <div className="w-7" />
+          </div>
+
+          {/* 2nd Row: Top Timeline Tabbar ([data-testid="ScrollSnap-List"] + right "+" icon) */}
           {(!isTabbarCompletelyHidden || showXray) && (
             <div
               className={`border-b border-neutral-800 bg-black/85 backdrop-blur-xs flex items-center ${
@@ -363,7 +416,7 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
                   ? 'opacity-35 ring-1 ring-rose-500/60 bg-rose-950/20'
                   : ''
               }`}
-              title='div:has(> div[role="tablist"])'
+              title='div:has([data-testid="ScrollSnap-List"]):not(:has([data-testid="TopNavBar"]))'
             >
               {/* First Child: "For You / Sana Özel" Tab */}
               {(!hideForYouTab || showXray) && (

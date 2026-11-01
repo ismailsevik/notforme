@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Classic Twitter (No Tabbar & Gray Box, No Grok, Clean Menu & Old Bird Logo)
+// @name         Classic Twitter (No Tabbar & Gray Box, Keep Profile & Bird Logo, No Grok, Clean Menu)
 // @namespace    https://github.com/classic-twitter/brave-shields-filter
-// @version      2.9.0
-// @description  Twitter/X üzerinde "Sana Özel / Takip edilenler / + Konular" satırını ve sağdaki "+" gri kutusunu kaldırır, Ayarlar sayfasını korur, Grok'u ve gereksiz menü öğelerini temizler, logoyu ve sekme ikonunu klasik mavi Twitter kuşu yapar.
+// @version      3.0.0
+// @description  Twitter/X üzerinde "Sana Özel / Takip edilenler / + Konular / +" satırını kaldırır, Profil resmini, Twitter kuşu logosunu ve Ayarlar sayfasını korur, Grok'u ve gereksiz menü öğelerini temizler.
 // @author       BirdShield
 // @match        https://x.com/*
 // @match        https://twitter.com/*
@@ -19,9 +19,10 @@
   const style = document.createElement('style');
   style.id = 'birdshield-classic-twitter-style';
   style.textContent = `
-    /* 1. Üst sekme çubuğu (Sana Özel, Takip edilenler, + Konular ve sağdaki + gri kutusu) - Ayarlar (/settings) korunur */
-    div:has([data-testid="ScrollSnap-List"]):not(:has(section)):not(:has(article)):not(:has([data-testid="cellInnerDiv"])):not(:has(main)):not([data-testid="primaryColumn"]),
-    nav:has([data-testid="ScrollSnap-List"]):not(:has(section)):not(:has(article)),
+    /* 1. Yalnızca 2. satırdaki sekme çubuğu (Sana Özel, Takip edilenler, + Konular ve sağdaki + gri kutusu) gizlenir.
+       1. satırdaki Profil Resmi (UserAvatar / TopNavBar), Twitter Logosu ve Ayarlar (/settings) korunur! */
+    div:has([data-testid="ScrollSnap-List"]):not(:has([data-testid="TopNavBar"])):not(:has([data-testid="DashButton_ProfileIcon_Link"])):not(:has([data-testid^="UserAvatar-Container"])):not(:has(img[src*="profile_images"])):not(:has(svg path[d^="M18.244"])):not(:has(h1)):not(:has(section)):not(:has(article)):not(:has([data-testid="cellInnerDiv"])):not(:has(main)):not([data-testid="primaryColumn"]),
+    nav:has([data-testid="ScrollSnap-List"]):not(:has([data-testid="TopNavBar"])):not(:has([data-testid="DashButton_ProfileIcon_Link"])):not(:has([data-testid^="UserAvatar-Container"])),
     div[role="tablist"]:has([data-testid="ScrollSnap-List"]),
     div[role="tablist"]:has([data-testid="ScrollSnap-List"]) ~ *,
     [data-testid="ScrollSnap-SwipeableList"],
@@ -33,9 +34,9 @@
     [data-testid="ScrollSnap-List"] a[href*="/lists"],
     [data-testid="ScrollSnap-nextButtonWrapper"],
     [data-testid="ScrollSnap-prevButtonWrapper"],
-    div:has(> a > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has(section)):not(:has(article)),
-    div:has(> button > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has(section)):not(:has(article)),
-    div:has(> div[role="button"] > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has(section)):not(:has(article)),
+    div:has(> a > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has([data-testid^="UserAvatar-Container"])):not(:has(section)):not(:has(article)),
+    div:has(> button > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has([data-testid^="UserAvatar-Container"])):not(:has(section)):not(:has(article)),
+    div:has(> div[role="button"] > div > svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not(:has([data-testid^="UserAvatar-Container"])):not(:has(section)):not(:has(article)),
     a:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"]):not([href="/compose/post"]),
     button:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"]),
     div[role="button"]:has(svg path[d^="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7"]):not([data-testid*="SideNav"]) {
@@ -98,11 +99,11 @@
       display: none !important;
     }
 
-    /* 4. X Logosunu Klasik Twitter Kuşu (#1DA1F2) ile değiştir */
+    /* 4. X Logosunu Klasik Twitter Kuşu (#1DA1F2) ile değiştir (opacity: 0 ile boyut korunur) */
     h1[role="heading"] a[href="/home"] svg path,
     header svg path[d^="M18.244"],
     #placeholder svg path {
-      display: none !important;
+      opacity: 0 !important;
     }
     h1[role="heading"] a[href="/home"] svg,
     header svg:has(path[d^="M18.244"]),
@@ -111,6 +112,10 @@
       background-repeat: no-repeat !important;
       background-position: center !important;
       background-size: contain !important;
+      width: 28px !important;
+      height: 28px !important;
+      min-width: 28px !important;
+      min-height: 28px !important;
     }
   `;
   document.documentElement.appendChild(style);
