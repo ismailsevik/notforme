@@ -15,6 +15,7 @@ import {
   EyeOff,
   Sparkles,
   CheckCircle2,
+  Plus,
 } from 'lucide-react';
 import { CLASSIC_TWITTER_BIRD_PATH, RepoConfig } from '../data/filterRules';
 
@@ -33,11 +34,13 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
     shieldsActive && config.enabledRuleIds.includes(id);
 
   const hideEntireTabbar = isRuleActive('hide-entire-tabbar');
+  const hidePlusIcon = isRuleActive('hide-plus-icon') || hideEntireTabbar;
   const hideForYouTab = isRuleActive('hide-for-you-tab') || hideEntireTabbar;
   const hideFollowingTab = isRuleActive('hide-following-tab') || hideEntireTabbar;
   const hideTopicsTab = isRuleActive('hide-topics-tab') || hideEntireTabbar;
   const isTabbarCompletelyHidden =
-    hideEntireTabbar || (hideForYouTab && hideFollowingTab && hideTopicsTab);
+    hideEntireTabbar ||
+    (hideForYouTab && hideFollowingTab && hideTopicsTab && hidePlusIcon);
 
   const hideGrokSidebar = isRuleActive('hide-grok-sidebar');
   const hideGrokDrawer = isRuleActive('hide-grok-drawer');
@@ -48,6 +51,7 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
 
   const blockedElementsCount = [
     hideEntireTabbar,
+    isRuleActive('hide-plus-icon'),
     isRuleActive('hide-for-you-tab'),
     isRuleActive('hide-following-tab'),
     isRuleActive('hide-topics-tab'),
@@ -250,7 +254,7 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
 
         {/* Center Primary Feed Column ([data-testid="primaryColumn"]) */}
         <div className="col-span-9 sm:col-span-6 lg:col-span-6 border-r border-neutral-800 flex flex-col">
-          {/* Top Timeline Tabbar ([data-testid="ScrollSnap-List"]) */}
+          {/* Top Timeline Tabbar ([data-testid="ScrollSnap-List"] + right "+" icon) */}
           {(!isTabbarCompletelyHidden || showXray) && (
             <div
               className={`border-b border-neutral-800 bg-black/85 backdrop-blur-xs flex items-center ${
@@ -258,7 +262,7 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
                   ? 'opacity-35 ring-1 ring-rose-500/60 bg-rose-950/20'
                   : ''
               }`}
-              title='[data-testid="ScrollSnap-List"]'
+              title='div:has(> div[role="tablist"])'
             >
               {/* First Child: "For You / Sana Özel" Tab */}
               {(!hideForYouTab || showXray) && (
@@ -299,7 +303,7 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
                 </div>
               )}
 
-              {/* Third+ Child on the right: "+ Konular (+ Topics)" Tab */}
+              {/* Third+ Child: "+ Konular (+ Topics)" Tab */}
               {(!hideTopicsTab || showXray) && (
                 <div
                   className={`flex-1 py-3 px-2 text-center text-xs sm:text-sm relative transition-opacity ${
@@ -313,6 +317,25 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
                     <div className="mt-0.5 text-[10px] font-mono text-rose-400">
                       :nth-child(n+3)
                     </div>
+                  )}
+                </div>
+              )}
+
+              {/* Far Right "+" Icon Button (M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7z) */}
+              {(!hidePlusIcon || showXray) && (
+                <div
+                  className={`px-3 py-3 flex flex-col items-center justify-center shrink-0 transition-opacity ${
+                    hidePlusIcon && showXray
+                      ? 'opacity-40 bg-rose-950/30 text-rose-300 ring-1 ring-rose-500/50'
+                      : 'text-neutral-400 hover:text-white'
+                  }`}
+                  title='svg:has(path[d^="M11 11V4"])'
+                >
+                  <Plus className="w-4 h-4" />
+                  {showXray && (
+                    <span className="text-[9px] font-mono text-rose-400 mt-0.5">
+                      + ikonu
+                    </span>
                   )}
                 </div>
               )}
@@ -355,7 +378,7 @@ export const TwitterSimulator: React.FC<TwitterSimulatorProps> = ({ config }) =>
                   </div>
 
                   <p className="mt-1.5 text-sm text-neutral-200 leading-relaxed">
-                    Üst satırdaki &quot;Sana özel&quot;, &quot;Takip edilenler&quot; ve sağdaki &quot;+ Konular&quot; sekme çubuğu (tabbar) tamamen kaldırıldı! Akış doğrudan gönderilerle başlıyor, Grok temizlendi ve sol üstte klasik mavi Twitter kuşu yer alıyor.
+                    Üst satırdaki &quot;Sana özel&quot;, &quot;Takip edilenler&quot;, &quot;+ Konular&quot; ve en sağdaki &quot;+&quot; ikonu (alt çizgisiyle birlikte) tamamen kaldırıldı!
                   </p>
 
                   <div className="mt-3 flex items-center justify-between max-w-xs text-neutral-500 text-xs font-mono tabular-nums">
